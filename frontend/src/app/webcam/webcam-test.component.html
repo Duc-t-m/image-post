@@ -1,0 +1,23 @@
+<div class="fixed inset-0 w-screen h-max min-h-screen z-10 backdrop-blur-sm" (click)="handleClose()"></div>
+<div class="z-20 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+bg-slate-800 rounded-lg p-5 text-white font-sans font-semibold w-fit min-[246px]:w-2/3">
+    <div class="" *ngIf="!error">
+        <video [class.show]="!isCaptured" [class.hide]="isCaptured" #video autoplay></video>
+        <canvas [class.show]="isCaptured" [class.hide]="!isCaptured" #canvas></canvas>
+    </div>
+    <div class="">
+        <button class="" *ngIf="!isCaptured" (click)="capture()">Snap Photo</button>
+        <button class="" *ngIf="isCaptured" (click)="removeCurrent()">Take Another</button>
+        <div *ngIf="error" class="">
+            {{ error }}. Please click refresh on stackblitz
+            <div class="mt-5">
+                <img src="https://trungk18.com/7e0976255739e721501803ee074f1f94/camera.gif" />
+            </div>
+        </div>
+    </div>
+    <ul class="">
+        <li *ngFor="let src of captures; let idx = index" (click)="setPhoto(idx)">
+            <img [src]="src" height="50" />
+        </li>
+    </ul>
+</div>

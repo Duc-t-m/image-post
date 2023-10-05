@@ -1,0 +1,86 @@
+<div class="border-t border-gray-200 bg-slate-700 px-4 py-3 sm:px-6 rounded-lg">
+    <div class="flex flex-1 justify-between sm:hidden">
+        <button type="button"
+            class="relative inline-flex items-center rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 "
+            (click)="changePage(this.pagination.page-1)" [class.hover:bg-gray-300]="pagination.page!=0"
+            [disabled]="pagination.page==0" [class.disabled:cursor-not-allowed]="pagination.page==0">
+            Previous
+        </button>
+        <button type="button"
+            class="relative ml-3 inline-flex items-center rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+            (click)="changePage(this.pagination.page+1)"
+            [class.hover:bg-gray-300]="pagination.page!=pagination.totalPages-1"
+            [disabled]="pagination.page==pagination.totalPages-1"
+            [class.disabled:cursor-not-allowed]="pagination.page==pagination.totalPages-1">
+            Next
+        </button>
+    </div>
+    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+        <div>
+            <p class="text-sm text-white">
+                Showing
+                <span class="font-medium">{{pagination.page*pagination.size + 1}}</span>
+                to
+                <span class="font-medium">{{pagination.page*pagination.size + pagination.numberOfElements}}</span>
+                of
+                <span class="font-medium">{{pagination.totalElements}}</span>
+                posts
+            </p>
+        </div>
+        <div>
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                <button type="button"
+                    class="relative inline-flex items-center rounded-l-md px-2 py-2 text-white ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0"
+                    (click)="changePage(this.pagination.page-1)" [class.hover:bg-gray-300]="pagination.page!=0"
+                    [disabled]="pagination.page==0" [class.disabled:cursor-not-allowed]="pagination.page==0">
+                    <span class="sr-only">Previous</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <button type="button"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-gray-400"
+                    [class.bg-indigo-600]="pagination.page==0" (click)="changePage(0)">
+                    1
+                </button>
+                <button type="button" *ngIf="pagination.pageStart>1"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300">
+                    ...
+                </button>
+                <button type="button" *ngFor="let i of getMidPages()"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-gray-400"
+                    [class.bg-indigo-600]="pagination.page==i" (click)="changePage(i)">
+                    {{i+1}}
+                </button>
+                <button type="button" *ngIf="pagination.pageEnd<pagination.totalPages-1"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300">
+                    ...
+                </button>
+                <button type="button" *ngIf="pagination.totalPages>1"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-gray-400"
+                    [class.bg-indigo-600]="pagination.page==pagination.totalPages-1"
+                    (click)="changePage(pagination.totalPages-1)">
+                    {{pagination.totalPages}}
+                </button>
+                <button type="button"
+                    class="relative inline-flex items-center rounded-r-md px-2 py-2 text-white ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0"
+                    (click)="changePage(this.pagination.page+1)"
+                    [class.hover:bg-gray-300]="pagination.page!=pagination.totalPages-1"
+                    [disabled]="pagination.page==pagination.totalPages-1"
+                    [class.disabled:cursor-not-allowed]="pagination.page==pagination.totalPages-1">
+                    <span class="sr-only">Next</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <span class="w-2"></span>
+                <input type="number" [max]="pagination.totalPages" [min]="1" class="rounded-lg px-2 w-12"
+                    (keydown)="handleEnter($event)" required>
+            </nav>
+        </div>
+    </div>
+</div>

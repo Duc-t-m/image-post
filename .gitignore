@@ -1,0 +1,12 @@
+frontend/.vscode
+frontend/node_modules
+frontend/package-lock.json
+dist/
+target/
+.project
+.classpath
+.mvn/wrapper/maven-wrapper.jar
+.settings
+/frontend/.angular/cache
+/frontend/src/assets/images
+

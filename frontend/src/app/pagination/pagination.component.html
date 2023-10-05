@@ -79,7 +79,7 @@
                 </button>
                 <span class="w-2"></span>
                 <input type="number" [max]="pagination.totalPages" [min]="1" class="rounded-lg px-2 w-12"
-                    (keydown)="handleEnter($event)" required>
+                    (keydown)="handleEnter($event)" required [placeholder]="pagination.page+1">
             </nav>
         </div>
     </div>

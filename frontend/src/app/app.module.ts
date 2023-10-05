@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { DeletePostComponent } from './delete-post/delete-post.component';
 import { WebcamComponent } from './webcam/webcam-test.component';
 import { PaginationComponent } from './pagination/pagination.component';
+import { ImagePreviewComponent } from './image-preview/image-preview.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +18,8 @@ import { PaginationComponent } from './pagination/pagination.component';
     AddPostComponent,
     DeletePostComponent,
     WebcamComponent,
-    PaginationComponent
+    PaginationComponent,
+    ImagePreviewComponent
   ],
   imports: [
     BrowserModule,

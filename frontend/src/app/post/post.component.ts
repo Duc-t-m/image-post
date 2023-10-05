@@ -19,6 +19,8 @@ export class PostComponent {
   }
   @Output() removePost: EventEmitter<number> = new EventEmitter();
   showButton = false;
+  showImagePreview = false;
+  imageToPreview = "";
 
   constructor(
     private postService: PostService,
@@ -72,7 +74,14 @@ export class PostComponent {
       .subscribe();
   }
 
-  toggleShowButton(){
-    this.showButton=!this.showButton;
+  toggleShowButton() {
+    this.showButton = !this.showButton;
+  }
+
+  toggleShowImagePreview(imageToPreview?: string) {
+    if (imageToPreview) {
+      this.imageToPreview = imageToPreview;
+    }
+    this.showImagePreview = !this.showImagePreview;
   }
 }

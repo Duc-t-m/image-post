@@ -3,7 +3,8 @@
         <div class="break-all mt-4">{{post.content}}</div>
         <div class="mt-3 flex gap-3 items-start justify-start flex-wrap">
             <img *ngFor="let image of post.images" src="/assets/images/{{image}}" [alt]="image"
-                class="max-h-20 max-w-20 border border-slate-500">
+                class="max-h-20 max-w-20 border border-slate-500 rounded-lg hover:cursor-pointer"
+                (click)="toggleShowImagePreview(image)">
         </div>
     </div>
     <ng-template #newContent class="relative">
@@ -43,6 +44,10 @@
         </button>
     </div>
 </div>
+
 <delete-post *ngIf="deleting" class="" (closeModal)="toggleDeleting()"
     (removePost)="this.removePost.emit(this.post.id)">
 </delete-post>
+
+<image-preview *ngIf="showImagePreview" [imageName]="imageToPreview"
+    (closeImage)="toggleShowImagePreview()"></image-preview>

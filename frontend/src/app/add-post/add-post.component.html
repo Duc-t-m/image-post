@@ -1,0 +1,20 @@
+<div class="fixed inset-0 w-screen h-max min-h-screen z-10 backdrop-blur-sm" (click)="handleClose()"></div>
+<form (ngSubmit)="onSubmit()" class="z-20 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+    bg-slate-800 rounded-lg p-5 text-white font-sans font-semibold w-fit min-[246px]:w-2/3">
+    <label for="content">Content</label>
+    <br>
+    <textarea #content name="content" id="content" rows="3" class="text-black w-full p-2 rounded-lg"
+        placeholder="Write something" [(ngModel)]="formData.content" maxlength="500"></textarea>
+    <br>
+    <ngx-dropzone (change)="onSelect($event)" accept="image/jpeg,image/jpg,image/png,image/gif">
+        <ngx-dropzone-label>Upload your images</ngx-dropzone-label>
+        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [removable]="true"
+            (removed)="onRemove(f)" [file]="f" class="">
+        </ngx-dropzone-image-preview>
+    </ngx-dropzone>
+    <div class="flex justify-end gap-2">
+        <button type="submit" class="bg-blue-500 p-1 rounded-lg mt-2 hover:bg-blue-700">Confirm</button>
+        <button type="button" class="bg-gray-400 p-1 rounded-lg mt-2 hover:bg-gray-600"
+            (click)="handleClose()">Close</button>
+    </div>
+</form>

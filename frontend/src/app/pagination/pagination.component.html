@@ -2,14 +2,14 @@
     <div class="flex flex-1 justify-between sm:hidden">
         <button type="button"
             class="relative inline-flex items-center rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 "
-            (click)="changePage(this.pagination.page-1)" [class.hover:bg-gray-300]="pagination.page!=0"
+            (click)="changePage(this.pagination.page-1)" [class.hover:bg-indigo-600]="pagination.page!=0"
             [disabled]="pagination.page==0" [class.disabled:cursor-not-allowed]="pagination.page==0">
             Previous
         </button>
         <button type="button"
             class="relative ml-3 inline-flex items-center rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
             (click)="changePage(this.pagination.page+1)"
-            [class.hover:bg-gray-300]="pagination.page!=pagination.totalPages-1"
+            [class.hover:bg-indigo-600]="pagination.page!=pagination.totalPages-1"
             [disabled]="pagination.page==pagination.totalPages-1"
             [class.disabled:cursor-not-allowed]="pagination.page==pagination.totalPages-1">
             Next
@@ -31,7 +31,7 @@
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                 <button type="button"
                     class="relative inline-flex items-center rounded-l-md px-2 py-2 text-white ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0"
-                    (click)="changePage(this.pagination.page-1)" [class.hover:bg-gray-300]="pagination.page!=0"
+                    (click)="changePage(this.pagination.page-1)" [class.hover:bg-indigo-600]="pagination.page!=0"
                     [disabled]="pagination.page==0" [class.disabled:cursor-not-allowed]="pagination.page==0">
                     <span class="sr-only">Previous</span>
                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -41,7 +41,7 @@
                     </svg>
                 </button>
                 <button type="button"
-                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-gray-400"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-indigo-600"
                     [class.bg-indigo-600]="pagination.page==0" (click)="changePage(0)">
                     1
                 </button>
@@ -50,7 +50,7 @@
                     ...
                 </button>
                 <button type="button" *ngFor="let i of getMidPages()"
-                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-gray-400"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-indigo-600"
                     [class.bg-indigo-600]="pagination.page==i" (click)="changePage(i)">
                     {{i+1}}
                 </button>
@@ -59,7 +59,7 @@
                     ...
                 </button>
                 <button type="button" *ngIf="pagination.totalPages>1"
-                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-gray-400"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300 hover:bg-indigo-600"
                     [class.bg-indigo-600]="pagination.page==pagination.totalPages-1"
                     (click)="changePage(pagination.totalPages-1)">
                     {{pagination.totalPages}}
@@ -67,7 +67,7 @@
                 <button type="button"
                     class="relative inline-flex items-center rounded-r-md px-2 py-2 text-white ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0"
                     (click)="changePage(this.pagination.page+1)"
-                    [class.hover:bg-gray-300]="pagination.page!=pagination.totalPages-1"
+                    [class.hover:bg-indigo-600]="pagination.page!=pagination.totalPages-1"
                     [disabled]="pagination.page==pagination.totalPages-1"
                     [class.disabled:cursor-not-allowed]="pagination.page==pagination.totalPages-1">
                     <span class="sr-only">Next</span>

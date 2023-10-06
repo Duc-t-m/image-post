@@ -21,6 +21,7 @@ export class PostComponent {
   showButton = false;
   showImagePreview = false;
   imageToPreview = "";
+  imageToPreviewIndex = -1;
 
   constructor(
     private postService: PostService,
@@ -78,10 +79,24 @@ export class PostComponent {
     this.showButton = !this.showButton;
   }
 
-  toggleShowImagePreview(imageToPreview?: string) {
-    if (imageToPreview) {
-      this.imageToPreview = imageToPreview;
-    }
+  startImagePreview(imageToPreview: string, imageToPreviewIndex: number) {
+    this.imageToPreview = imageToPreview;
+    this.imageToPreviewIndex = imageToPreviewIndex;
+    this.toggleShowImagePreview();
+  }
+
+  toggleShowImagePreview() {
     this.showImagePreview = !this.showImagePreview;
+  }
+
+  changeImage(to: string) {
+    if (to == "next") {
+      this.imageToPreviewIndex++;
+      this.imageToPreview = this.post.images[this.imageToPreviewIndex];
+    }
+    if (to == "prev") {
+      this.imageToPreviewIndex--;
+      this.imageToPreview = this.post.images[this.imageToPreviewIndex];
+    }
   }
 }

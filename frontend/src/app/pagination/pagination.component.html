@@ -17,7 +17,7 @@
     </div>
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
-            <p class="text-sm text-white">
+            <p class="text-sm text-white" *ngIf="pagination.totalElements">
                 Showing
                 <span class="font-medium">{{pagination.page*pagination.size + 1}}</span>
                 to

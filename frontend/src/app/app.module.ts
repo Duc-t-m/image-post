@@ -11,6 +11,7 @@ import { DeletePostComponent } from './delete-post/delete-post.component';
 import { WebcamComponent } from './webcam/webcam-test.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { ImagePreviewComponent } from './image-preview/image-preview.component';
+import { PostLoadingComponent } from './post-loading/post-loading.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,7 +20,8 @@ import { ImagePreviewComponent } from './image-preview/image-preview.component';
     DeletePostComponent,
     WebcamComponent,
     PaginationComponent,
-    ImagePreviewComponent
+    ImagePreviewComponent,
+    PostLoadingComponent
   ],
   imports: [
     BrowserModule,

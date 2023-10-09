@@ -2,7 +2,7 @@
 <div
     class="z-20 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-2/3 flex items-center justify-around gap-3">
     <button type="button" class="bg-white text-black rounded-lg p-4 hover:bg-indigo-600 hover:text-white"
-        (click)="this.prevImage.emit()" [class.hover:cursor-not-allowed]="onFirst" [disabled]="onFirst">
+        (click)="this.prevImage.emit()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
@@ -10,20 +10,16 @@
     </button>
     <img src="assets/images/{{imageName}}" alt="{{imageName}}" class="w-2/3 h-full rounded-lg">
     <button type="button" class="bg-white text-black rounded-lg p-4 hover:bg-indigo-600 hover:text-white"
-        (click)="this.nextImage.emit()" [class.hover:cursor-not-allowed]="onLast" [disabled]="onLast">
+        (click)="this.nextImage.emit()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3" />
         </svg>
     </button>
 </div>
-<button type="button"
-    class="z-20 fixed top-4 right-4 hover:bg-indigo-600 rounded-xl p-1"
-    (click)="handleClose()">
+<button type="button" class="z-20 fixed top-4 right-4 hover:bg-indigo-600 rounded-xl p-1" (click)="handleClose()">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10">
-        <path fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 
-            10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
-            clip-rule="evenodd" />
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 
+            10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
     </svg>
 </button>

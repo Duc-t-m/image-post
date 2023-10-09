@@ -1,9 +1,9 @@
-<div (mouseenter)="toggleShowButton()" (mouseleave)="toggleShowButton()" class="p-4 h-full w-full">
+<div (mouseenter)="toggleShowButton()" (mouseleave)="hideButton()" class="p-4 h-full w-full">
     <div *ngIf="!editing;else newContent">
-        <div class="break-all mt-4">{{post.content}}</div>
-        <div class="mt-3 flex gap-3 items-start justify-start flex-wrap">
+        <div class="break-all mt-4 w-[98%]">{{post.content}}</div>
+        <div class="mt-3 flex gap-2 items-start justify-start flex-wrap">
             <img *ngFor="let image of post.images; index as i" src="/assets/images/{{image}}" [alt]="image"
-                class="max-h-20 max-w-20 border border-slate-500 rounded-lg hover:cursor-pointer"
+                class="h-20 w-20 border border-slate-500 rounded-lg hover:cursor-pointer"
                 (click)="startImagePreview(image, i)">
         </div>
     </div>
@@ -17,7 +17,7 @@
             </ngx-dropzone-image-preview>
         </ngx-dropzone>
     </ng-template>
-    <div class="absolute right-1 top-1" *ngIf="showButton">
+    <div class="absolute right-1 top-1" *ngIf="showButton || editing">
         <button type="button" class="hover:bg-indigo-600 p-1 rounded-md" (click)="toggleEditing()">
             <svg *ngIf="!editing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="w-5 h-5">
@@ -54,7 +54,5 @@
     (closeImage)="toggleShowImagePreview()" 
     (nextImage)="changeImage('next')"
     (prevImage)="changeImage('prev')"
-    [onFirst]="this.imageToPreviewIndex==0"
-    [onLast]="this.imageToPreviewIndex==this.post.images.length-1"
     >
 </image-preview>

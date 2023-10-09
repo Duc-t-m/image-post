@@ -76,7 +76,11 @@ export class PostComponent {
   }
 
   toggleShowButton() {
-    this.showButton = !this.showButton;
+    this.showButton = true;
+  }
+
+  hideButton() {
+    this.showButton = false;
   }
 
   startImagePreview(imageToPreview: string, imageToPreviewIndex: number) {
@@ -92,10 +96,14 @@ export class PostComponent {
   changeImage(to: string) {
     if (to == "next") {
       this.imageToPreviewIndex++;
+      if (this.imageToPreviewIndex == this.post.images.length)
+        this.imageToPreviewIndex = 0;
       this.imageToPreview = this.post.images[this.imageToPreviewIndex];
     }
     if (to == "prev") {
       this.imageToPreviewIndex--;
+      if (this.imageToPreviewIndex == -1)
+        this.imageToPreviewIndex = this.post.images.length - 1;
       this.imageToPreview = this.post.images[this.imageToPreviewIndex];
     }
   }

@@ -10,6 +10,7 @@ import { PostService } from 'src/service/post.service';
 })
 export class PostComponent {
   @Input() post: PostDTO = {} as PostDTO;
+  imagesToDisplay: string[] = [];
   editing: boolean = false;
   deleting: boolean = false;
   files: File[] = [];
@@ -20,13 +21,20 @@ export class PostComponent {
   @Output() removePost: EventEmitter<number> = new EventEmitter();
   showButton = false;
   showImagePreview = false;
-  imageToPreview = "";
   imageToPreviewIndex = -1;
 
   constructor(
     private postService: PostService,
     private imageService: ImageService
   ) { }
+
+  ngOnChanges() {
+    if (this.post) {
+      this.imagesToDisplay = this.post.images.length <= 11
+        ? this.post.images
+        : this.post.images.slice(0, 10);
+    }
+  }
 
   toggleEditing() {
     if (this.editing) {
@@ -83,28 +91,12 @@ export class PostComponent {
     this.showButton = false;
   }
 
-  startImagePreview(imageToPreview: string, imageToPreviewIndex: number) {
-    this.imageToPreview = imageToPreview;
+  startImagePreview(imageToPreviewIndex: number) {
     this.imageToPreviewIndex = imageToPreviewIndex;
     this.toggleShowImagePreview();
   }
 
   toggleShowImagePreview() {
     this.showImagePreview = !this.showImagePreview;
-  }
-
-  changeImage(to: string) {
-    if (to == "next") {
-      this.imageToPreviewIndex++;
-      if (this.imageToPreviewIndex == this.post.images.length)
-        this.imageToPreviewIndex = 0;
-      this.imageToPreview = this.post.images[this.imageToPreviewIndex];
-    }
-    if (to == "prev") {
-      this.imageToPreviewIndex--;
-      if (this.imageToPreviewIndex == -1)
-        this.imageToPreviewIndex = this.post.images.length - 1;
-      this.imageToPreview = this.post.images[this.imageToPreviewIndex];
-    }
   }
 }

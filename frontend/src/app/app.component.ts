@@ -33,7 +33,7 @@ export class AppComponent {
             numberOfElements: 0
           })
         }),
-        retry({ count: 3, delay: 60 * 1000, })
+        retry({ count: 3, delay: 10 * 1000, })
       )
       .subscribe((data: any) => {
         this.posts = data.content;

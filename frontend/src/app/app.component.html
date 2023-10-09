@@ -4,7 +4,7 @@
 </post>
 <div *ngIf="posts.length==0" class="contents">
     <post-loading *ngFor="let i of [0, 1, 2]"
-        class="w-2/3 h-72 border-white border-2 rounded text-white font-sans font-bold relative overflow-auto">
+        class="w-2/3 xl:h-72 h-fit border-white border-2 rounded text-white font-sans font-bold relative overflow-auto">
     </post-loading>
 </div>
 <!-- <button type="button" class="text-white lg:absolute lg:top-10 lg:right-14 lg:bottom-auto bottom-2 font-sans font-bold

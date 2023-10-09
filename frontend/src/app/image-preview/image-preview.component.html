@@ -1,6 +1,6 @@
 <div class="fixed inset-0 w-screen h-max min-h-screen z-10 backdrop-blur-sm" (click)="handleClose()"></div>
 <div
-    class="z-20 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-2/3 flex items-center justify-around gap-3">
+    class="z-20 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-2/3 flex items-center justify-between px-4">
     <button type="button" class="bg-white text-black rounded-lg p-4 hover:bg-indigo-600 hover:text-white"
         (click)="this.prevImage.emit()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -8,7 +8,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
         </svg>
     </button>
-    <img src="assets/images/{{imageName}}" alt="{{imageName}}" class="w-2/3 h-full rounded-lg">
+    <img src="assets/images/{{imageName}}" alt="{{imageName}}" class="rounded-lg">
     <button type="button" class="bg-white text-black rounded-lg p-4 hover:bg-indigo-600 hover:text-white"
         (click)="this.nextImage.emit()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

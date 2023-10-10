@@ -13,7 +13,7 @@ export class AddPostComponent {
   formData = {
     id: -1,
     content: '',
-    images: this.files
+    images: [] as File[]
   };
   @Output() closeModal = new EventEmitter<boolean>();
   @Output() reloadPosts = new EventEmitter();
@@ -34,11 +34,17 @@ export class AddPostComponent {
   }
 
   onSelect(event: any) {
-    this.files.push(...event.addedFiles);
+    this.formData.images = [
+      ...this.formData.images,
+      ...event.addedFiles
+    ]
   }
 
   onRemove(event: any) {
-    this.files.splice(this.files.indexOf(event), 1);
+    this.formData.images = [
+      ...this.formData.images.slice(0, this.formData.images.indexOf(event)),
+      ...this.formData.images.slice(this.formData.images.indexOf(event)+1)
+    ]
   }
 
   onSubmit() {
@@ -47,7 +53,7 @@ export class AddPostComponent {
       images: this.formData.images.map(image => image.name)
     })
       .subscribe((post) => {
-        this.imageService.saveToLocal(this.files)
+        this.imageService.saveToLocal(this.formData.images)
           .subscribe(imageNames => {
             let saveImages = imageNames.map(name => {
               return { path: name, post: post.id } as ImageDTO;

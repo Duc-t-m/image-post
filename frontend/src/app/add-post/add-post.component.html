@@ -8,12 +8,12 @@
     <br>
     <ngx-dropzone (change)="onSelect($event)" accept="image/jpeg,image/jpg,image/png,image/gif">
         <ngx-dropzone-label>Upload your images</ngx-dropzone-label>
-        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [removable]="true"
+        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of formData.images" [removable]="true"
             (removed)="onRemove(f)" [file]="f" class="">
         </ngx-dropzone-image-preview>
     </ngx-dropzone>
     <div class="flex justify-end gap-2">
-        <button type="submit" class="bg-blue-500 p-1 rounded-lg mt-2 hover:bg-blue-700">Confirm</button>
+        <button type="submit" class="bg-blue-500 p-1 rounded-lg mt-2 hover:bg-indigo-600">Confirm</button>
         <button type="button" class="bg-gray-400 p-1 rounded-lg mt-2 hover:bg-gray-600"
             (click)="handleClose()">Close</button>
     </div>

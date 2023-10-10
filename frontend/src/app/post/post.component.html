@@ -16,7 +16,7 @@
         </div>
     </div>
     <ng-template #newContent class="relative">
-        <textarea #newContentInput type="text" class="bg-slate-500 w-full p-1 resize-none rounded-lg mt-4 break-all"
+        <textarea #newContentInput type="text" class="text-black w-full p-1 resize-none rounded-lg mt-4 break-all"
             [(ngModel)]="post.content" (keypress)="handleEnter($event)" maxlength="500" rows="4"></textarea>
         <ngx-dropzone (change)="onSelect($event)" accept="image/*">
             <ngx-dropzone-label>Upload your images</ngx-dropzone-label>

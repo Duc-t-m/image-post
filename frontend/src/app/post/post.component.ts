@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { ImageDTO } from 'src/model/image.type';
 import { PostDTO } from 'src/model/post.type';
 import { ImageService } from 'src/service/image.service';
@@ -14,7 +14,8 @@ export class PostComponent {
   editing: boolean = false;
   deleting: boolean = false;
   files: File[] = [];
-  @ViewChild("newContentInput") set contentRef(ref: ElementRef) {
+  @ViewChild("newContentInput")
+  set contentRef(ref: ElementRef) {
     if (!!ref)
       ref.nativeElement.focus();
   }
@@ -81,7 +82,7 @@ export class PostComponent {
     this.files.splice(this.files.indexOf(event), 1);
     this.post.images = [
       ...this.post.images.slice(0, this.post.images.indexOf(event.name)),
-      ...this.post.images.slice(this.post.images.indexOf(event.name)+1)
+      ...this.post.images.slice(this.post.images.indexOf(event.name) + 1)
     ];
     this.imageService.deleteImage(event.name)
       .subscribe();

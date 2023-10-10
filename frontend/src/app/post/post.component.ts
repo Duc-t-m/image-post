@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ImageDTO } from 'src/model/image.type';
 import { PostDTO } from 'src/model/post.type';
 import { ImageService } from 'src/service/image.service';
@@ -9,8 +9,8 @@ import { PostService } from 'src/service/post.service';
   templateUrl: './post.component.html'
 })
 export class PostComponent {
-  @Input() post: PostDTO = {} as PostDTO;
-  imagesToDisplay: string[] = [];
+  @Input()
+  post: PostDTO = {} as PostDTO;
   editing: boolean = false;
   deleting: boolean = false;
   files: File[] = [];
@@ -28,12 +28,10 @@ export class PostComponent {
     private imageService: ImageService
   ) { }
 
-  ngOnChanges() {
-    if (this.post) {
-      this.imagesToDisplay = this.post.images.length <= 11
-        ? this.post.images
-        : this.post.images.slice(0, 10);
-    }
+  getImagesToDisplay() {
+    if (this.post.images.length <= 11)
+      return this.post.images;
+    return this.post.images.slice(0, 10);
   }
 
   toggleEditing() {
@@ -67,7 +65,10 @@ export class PostComponent {
     this.files.push(...event.addedFiles);
     this.imageService.saveToLocal(event.addedFiles)
       .subscribe(imageNames => {
-        this.post.images.push(...imageNames);
+        this.post.images = [
+          ...this.post.images,
+          ...imageNames
+        ];
         this.imageService.saveToDatabase(imageNames.map(
           imageName => {
             return { path: imageName, post: this.post.id } as ImageDTO;
@@ -78,7 +79,10 @@ export class PostComponent {
 
   onRemove(event: File) {
     this.files.splice(this.files.indexOf(event), 1);
-    this.post.images.splice(this.post.images.indexOf(event.name), 1);
+    this.post.images = [
+      ...this.post.images.slice(0, this.post.images.indexOf(event.name)),
+      ...this.post.images.slice(this.post.images.indexOf(event.name)+1)
+    ];
     this.imageService.deleteImage(event.name)
       .subscribe();
   }

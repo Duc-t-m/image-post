@@ -1,9 +1,9 @@
-<div id="dropzone" (drop)="handleFiles($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+<div id="dropzone" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
     (click)="openFileInput()"
     class="border-4 border-indigo-600 border-dashed hover:cursor-pointer bg-slate-500 flex justify-center items-center rounded-lg p-4 gap-2 flex-wrap h-fit min-h-[9rem]"
     [class.justify-center]="noImages()" [class.justify-start]="!noImages()">
     <p *ngIf="noImages()">Drag & drop / click to select your images here</p>
-    <div *ngFor="let image of imagesDataUrl; index as i" class="relative">
+    <div *ngFor="let image of _imagesDataUrl; index as i" class="relative">
         <img [src]="image" class="w-20 h-20 rounded" alt="url">
         <button type="button"
             class="absolute bg-indigo-600 hover:p-1 rounded-xl top-0 right-0 transform translate-x-1/2 -translate-y-1/2"
@@ -16,4 +16,4 @@
         </button>
     </div>
 </div>
-<input #fileInput type="file" multiple accept="image/*" hidden (change)="handleFiles($event)">
+<input #fileInput type="file" multiple accept="image/*" hidden (change)="onFileInputChange($event)">

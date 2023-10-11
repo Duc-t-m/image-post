@@ -5,9 +5,14 @@ import { Component, EventEmitter, Output, ElementRef, ViewChild, Input } from '@
   templateUrl: './dropzone.component.html'
 })
 export class DropzoneComponent {
+  _imagesDataUrl: string[] = [];
+  editing: boolean = false;
   //an input property to accept the images data url
   @Input()
-  imagesDataUrl: string[] = [];
+  set imagesDataUrl(_imagesDataUrl: string[]) {
+    this._imagesDataUrl = _imagesDataUrl;
+    this.editing = true;
+  };
   //an output event to emit the files added to the dropzone
   @Output()
   addedFiles = new EventEmitter<File[]>();
@@ -33,33 +38,40 @@ export class DropzoneComponent {
     this.fileInputRef.nativeElement.click();
   }
 
-  //a function accept an event, check if the event is a drag event or input change event
-  //then take the files from the event and add them to imagesDataUrl and images
-  //then emit the added files
-  handleFiles(event: DragEvent | Event) {
-    let files: FileList | undefined | null = {} as FileList;
-    if (event instanceof DragEvent) {
-      event.preventDefault();
-      files = event.dataTransfer?.files;
-    } else {
-      files = (event.target as HTMLInputElement).files;
-    }
+  //a function to handle the files added to the dropzone
+  handleNewFiles(files: FileList | null | undefined) {
     if (files) {
       let newFiles: File[] = [];
       for (let i = 0; i < files.length; i++) {
-        if (files[i].type.startsWith('image/')) {
+        if (!files[i].type.startsWith('image/'))
+          continue;
+        if (!this.editing)
           this.generateDataUrl(files[i]);
-          newFiles.push(files[i]);
-        }
+        newFiles.push(files[i]);
       }
       this.addedFiles.emit(newFiles);
     }
   }
 
+  //a function to handle the files dropped on the dropzone
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+    let files = event.dataTransfer?.files;
+    this.handleNewFiles(files);
+
+  }
+
+  //a function to handle the files selected from the file input
+  onFileInputChange(event: Event) {
+    let files = (event.target as HTMLInputElement).files;
+    this.handleNewFiles(files);
+  }
+
   //a function to remove image from the dropzone and emit the index of the removed image
-  removeImage(event: MouseEvent, index: number, local?: string) {
+  removeImage(event: MouseEvent, index: number) {
     event.stopPropagation();
-    this.imagesDataUrl.splice(index, 1);
+    if (!this.editing)
+      this._imagesDataUrl.splice(index, 1);
     this.removedFile.emit(index);
   }
 
@@ -67,7 +79,7 @@ export class DropzoneComponent {
   generateDataUrl(image: File) {
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
-      this.imagesDataUrl.push(fileReader.result as string);
+      this._imagesDataUrl.push(fileReader.result as string);
     };
     fileReader.readAsDataURL(image);
   }
@@ -75,6 +87,6 @@ export class DropzoneComponent {
   //a function check if imagesDataUrl is empty
   //if so, return true, otherwise return false
   noImages() {
-    return this.imagesDataUrl.length == 0;
+    return this._imagesDataUrl.length == 0;
   }
 }

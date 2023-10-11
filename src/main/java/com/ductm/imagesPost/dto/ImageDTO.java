@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ImageDTO {
-	private String path;
-	private long post;
+
+    private String path;
+    private long post;
 }

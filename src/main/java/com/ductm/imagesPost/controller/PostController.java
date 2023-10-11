@@ -4,10 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +24,7 @@ import com.ductm.imagesPost.service.ImageSavingService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin
@@ -50,9 +48,9 @@ public class PostController {
     }
 
     @PostMapping("")
-    Post addPost(@RequestBody PostDTO postDto) {
+    ResponseEntity<Long> addPost(@RequestBody PostDTO postDto) {
         Post post = this.postMapper.toEntity(postDto);
-        return this.postRepository.save(post);
+        return ResponseEntity.ok(this.postRepository.save(post).getId());
     }
 
     @DeleteMapping("/{id}")

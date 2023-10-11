@@ -1,5 +1,6 @@
 package com.ductm.imagesPost.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,14 +22,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
-	@Column(name = "content", length = 500)
-	private String content;
-	
-	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<Image> images;
+public class Post implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "content", length = 500)
+    private String content;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Image> images;
 }

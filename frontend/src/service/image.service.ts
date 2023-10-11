@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Post, PostDTO } from 'src/model/post.type';
-import { Image, ImageDTO } from 'src/model/image.type';
+import { ImageDTO } from 'src/model/image.type';
 
 @Injectable({
   providedIn: 'root'

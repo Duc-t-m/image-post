@@ -13,7 +13,6 @@ export class PostComponent {
   post: PostDTO = {} as PostDTO;
   editing: boolean = false;
   deleting: boolean = false;
-  files: File[] = [];
   @ViewChild("newContentInput")
   set contentRef(ref: ElementRef) {
     if (!!ref)
@@ -39,15 +38,6 @@ export class PostComponent {
     if (this.editing) {
       this.postService.addPost(this.post)
         .subscribe();
-      this.files = [];
-    } else {
-      for (let imageName of this.post.images) {
-        this.imageService.getFromLocal(imageName)
-          .subscribe(imageBlob => {
-            let newFile = new File([imageBlob], imageName);
-            this.files.push(newFile);
-          });
-      }
     }
     this.editing = !this.editing
   }
@@ -62,29 +52,40 @@ export class PostComponent {
     }
   }
 
-  onSelect(event: any) {
-    this.files.push(...event.addedFiles);
-    this.imageService.saveToLocal(event.addedFiles)
-      .subscribe(imageNames => {
-        this.post.images = [
-          ...this.post.images,
-          ...imageNames
-        ];
-        this.imageService.saveToDatabase(imageNames.map(
-          imageName => {
-            return { path: imageName, post: this.post.id } as ImageDTO;
-          }
-        )).subscribe();
+  //returns the all images data url from post.images
+  //with prefix assets/images/
+  getImagesDataUrl() {
+    return this.post.images.map((image: ImageDTO) => `assets/images/${image.path}`);
+  }
+
+  //save all newFiles with imageService.saveToLocal
+  //then save to database with imageService.saveToDatabase
+  //then push all new images to post.images
+  addImages(newFiles: File[]) {
+    this.imageService.saveToLocal(newFiles)
+      .subscribe((imageNames: string[]) => {
+        let imagesToSave = imageNames.map((imageName: string) => {
+          return {
+            path: imageName,
+            post: this.post.id
+          } as ImageDTO
+        });
+        this.imageService.saveToDatabase(imagesToSave)
+          .subscribe(() => {
+            this.post.images = [
+              ...this.post.images,
+              ...imagesToSave
+            ]
+          });
       });
   }
 
-  onRemove(event: File) {
-    this.files.splice(this.files.indexOf(event), 1);
-    this.post.images = [
-      ...this.post.images.slice(0, this.post.images.indexOf(event.name)),
-      ...this.post.images.slice(this.post.images.indexOf(event.name) + 1)
-    ];
-    this.imageService.deleteImage(event.name)
+  //remove the image from post.images with the index given
+  //also delete the image with imageService.deleteImage
+  removeImage(index: number) {
+    let imageToDelete = this.post.images[index];
+    this.post.images.splice(index, 1);
+    this.imageService.deleteImage(imageToDelete.path)
       .subscribe();
   }
 
@@ -103,5 +104,9 @@ export class PostComponent {
 
   toggleShowImagePreview() {
     this.showImagePreview = !this.showImagePreview;
+  }
+
+  getAllImagesToPreview() {
+    return this.post.images.map((image: ImageDTO) => image.path);
   }
 }

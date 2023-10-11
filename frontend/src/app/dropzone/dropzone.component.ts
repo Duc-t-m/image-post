@@ -33,31 +33,37 @@ export class DropzoneComponent {
     this.fileInputRef.nativeElement.click();
   }
 
-  //a function accept an event, check if the event is a drag event or input change event
-  //then take the files from the event and add them to imagesDataUrl and images
-  //then emit the added files
-  handleFiles(event: DragEvent | Event) {
-    let files: FileList | undefined | null = {} as FileList;
-    if (event instanceof DragEvent) {
-      event.preventDefault();
-      files = event.dataTransfer?.files;
-    } else {
-      files = (event.target as HTMLInputElement).files;
-    }
-    if (files) {
-      let newFiles: File[] = [];
-      for (let i = 0; i < files.length; i++) {
-        if (files[i].type.startsWith('image/')) {
-          this.generateDataUrl(files[i]);
-          newFiles.push(files[i]);
-        }
+  //a function to handle the files added to the dropzone
+  handleNewFiles(files: FileList) {
+    let newFiles: File[] = [];
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].type.startsWith('image/')) {
+        this.generateDataUrl(files[i]);
+        newFiles.push(files[i]);
       }
-      this.addedFiles.emit(newFiles);
+    }
+    this.addedFiles.emit(newFiles);
+  }
+
+  //a function to handle the files dropped on the dropzone
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+    let files = event.dataTransfer?.files;
+    if (files) {
+      this.handleNewFiles(files);
+    }
+  }
+
+  //a function to handle the files selected from the file input
+  onFileInputChange(event: Event) {
+    let files = (event.target as HTMLInputElement).files;
+    if (files) {
+      this.handleNewFiles(files);
     }
   }
 
   //a function to remove image from the dropzone and emit the index of the removed image
-  removeImage(event: MouseEvent, index: number, local?: string) {
+  removeImage(event: MouseEvent, index: number) {
     event.stopPropagation();
     this.imagesDataUrl.splice(index, 1);
     this.removedFile.emit(index);

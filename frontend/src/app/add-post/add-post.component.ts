@@ -9,12 +9,8 @@ import { PostService } from 'src/service/post.service';
   templateUrl: './add-post.component.html'
 })
 export class AddPostComponent {
+  post: PostDTO = {} as PostDTO;
   files: File[] = [];
-  formData = {
-    id: -1,
-    content: '',
-    images: [] as File[]
-  };
   @Output() closeModal = new EventEmitter<boolean>();
   @Output() reloadPosts = new EventEmitter();
 
@@ -33,34 +29,32 @@ export class AddPostComponent {
     this.closeModal.emit();
   }
 
-  onSelect(event: any) {
-    this.formData.images = [
-      ...this.formData.images,
-      ...event.addedFiles
-    ]
+  onSelect(addedFiles: File[]) {
+    this.files.push(...addedFiles);
   }
 
-  onRemove(event: any) {
-    this.formData.images = [
-      ...this.formData.images.slice(0, this.formData.images.indexOf(event)),
-      ...this.formData.images.slice(this.formData.images.indexOf(event)+1)
-    ]
+  onRemove(index: number) {
+    this.files.splice(index, 1);
   }
 
+  //a function to handle the submit event of the form
+  //use imageService.saveToLocal to save the images to local storage
+  //use postService.addPost to add the post to the database
+  //use imageService.saveToDatabase to save the images to the database
+  //then emit the reloadPosts event
   onSubmit() {
-    this.postService.addPost({
-      ...this.formData,
-      images: this.formData.images.map(image => image.name)
-    })
-      .subscribe((post) => {
-        this.imageService.saveToLocal(this.formData.images)
-          .subscribe(imageNames => {
-            let saveImages = imageNames.map(name => {
-              return { path: name, post: post.id } as ImageDTO;
-            })
-            this.imageService.saveToDatabase(saveImages)
-              .subscribe(data => this.reloadPosts.emit());
-          });
-      });
+    this.imageService.saveToLocal(this.files)
+      .subscribe(imageNames => {
+        this.postService.addPost(this.post)
+          .subscribe((post) => {
+            this.post.images = imageNames.map(imageName => {
+              return { path: imageName, post } as ImageDTO;
+            });
+            this.imageService.saveToDatabase(this.post.images)
+              .subscribe(() => {
+                this.reloadPosts.emit();
+              })
+          })
+      })
   }
 }

@@ -24,7 +24,7 @@
                 <span class="font-medium">{{pagination.page*pagination.size + pagination.numberOfElements}}</span>
                 of
                 <span class="font-medium">{{pagination.totalElements}}</span>
-                posts
+                post<span *ngIf="pagination.totalElements>1">s</span>
             </p>
         </div>
         <div>

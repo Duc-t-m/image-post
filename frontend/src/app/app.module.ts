@@ -12,6 +12,7 @@ import { WebcamComponent } from './webcam/webcam-test.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { ImagePreviewComponent } from './image-preview/image-preview.component';
 import { PostLoadingComponent } from './post-loading/post-loading.component';
+import { DropzoneComponent } from './dropzone/dropzone.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +22,8 @@ import { PostLoadingComponent } from './post-loading/post-loading.component';
     WebcamComponent,
     PaginationComponent,
     ImagePreviewComponent,
-    PostLoadingComponent
+    PostLoadingComponent,
+    DropzoneComponent
   ],
   imports: [
     BrowserModule,

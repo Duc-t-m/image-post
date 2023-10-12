@@ -10,3 +10,4 @@ target/
 /frontend/.angular/cache
 /frontend/src/assets/images
 
+package-lock.json

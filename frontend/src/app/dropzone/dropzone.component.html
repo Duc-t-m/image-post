@@ -1,5 +1,5 @@
 <div id="dropzone" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-    (click)="openFileInput()"
+    (click)="fileInput.click()"
     class="border-4 border-indigo-600 border-dashed hover:cursor-pointer bg-slate-500 flex justify-center items-center rounded-lg p-4 gap-2 flex-wrap h-fit min-h-[9rem]"
     [class.justify-center]="noImages()" [class.justify-start]="!noImages()">
     <p *ngIf="noImages()">Drag & drop / click to select your images here</p>

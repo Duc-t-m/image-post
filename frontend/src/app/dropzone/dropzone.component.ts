@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 
 @Component({
   selector: 'dropzone',
@@ -20,9 +20,6 @@ export class DropzoneComponent {
   @Output()
   removedFile = new EventEmitter<number>();
 
-  @ViewChild("fileInput")
-  fileInputRef: ElementRef = {} as ElementRef;
-
   onDragOver(event: DragEvent) {
     event.stopPropagation();
     event.preventDefault();
@@ -31,11 +28,6 @@ export class DropzoneComponent {
   onDragLeave(event: DragEvent) {
     event.stopPropagation();
     event.preventDefault();
-  }
-
-  //a function accepting click event on dropzone div and triggering click event on file input
-  openFileInput() {
-    this.fileInputRef.nativeElement.click();
   }
 
   //a function to handle the files added to the dropzone

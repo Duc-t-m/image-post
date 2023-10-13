@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'dropzone',
@@ -19,6 +19,7 @@ export class DropzoneComponent {
   //an output event to emit the index of file removed from the dropzone
   @Output()
   removedFile = new EventEmitter<number>();
+  @ViewChild('fileInput') fileInput: ElementRef = {} as ElementRef;
 
   onDragOver(event: DragEvent) {
     event.stopPropagation();
@@ -50,13 +51,13 @@ export class DropzoneComponent {
     event.preventDefault();
     let files = event.dataTransfer?.files;
     this.handleNewFiles(files);
-
   }
 
   //a function to handle the files selected from the file input
   onFileInputChange(event: Event) {
     let files = (event.target as HTMLInputElement).files;
     this.handleNewFiles(files);
+    this.fileInput.nativeElement.value = '';
   }
 
   //a function to remove image from the dropzone and emit the index of the removed image

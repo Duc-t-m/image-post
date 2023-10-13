@@ -1,4 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FileInputValidators } from '@ngx-dropzone/cdk';
 import { ImageDTO } from 'src/model/image.type';
 import { PostDTO } from 'src/model/post.type';
 import { ImageService } from 'src/service/image.service';
@@ -9,8 +11,20 @@ import { PostService } from 'src/service/post.service';
   templateUrl: './post.component.html'
 })
 export class PostComponent {
-  @Input()
   post: PostDTO = {} as PostDTO;
+  postForm = {} as FormGroup;
+  @Input()
+  set _post(post: PostDTO) {
+    this.post = post;
+    this.postForm = this.formBuilder.group({
+      content: [this.post.content, [Validators.required, Validators.maxLength(500)]],
+      files: [this.images, [Validators.required, FileInputValidators.maxSize(this.maxFilesSize), Validators.maxLength(this.maxFilesLength)]]
+    });
+  };
+  maxFilesLength = 50;
+  maxFilesSize = this.maxFilesLength * 1024 * 1024 * 5; // ~5MB per file
+  get contentInput() { return this.postForm.get('content'); }
+  get filesInput() { return this.postForm.get('files'); }
   editing: boolean = false;
   deleting: boolean = false;
   @ViewChild("newContentInput")
@@ -25,8 +39,22 @@ export class PostComponent {
 
   constructor(
     private postService: PostService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private formBuilder: FormBuilder
   ) { }
+
+  //a function use imageService.getFromLocal to get the images from local storage
+  //then return the images
+  get images() {
+    let files = [] as File[];
+    for (let i = 0; i < this.post.images.length; i++) {
+      this.imageService.getFromLocal(this.post.images[i].path)
+        .subscribe(file => {
+          files.push(new File([file], this.post.images[i].path));
+        });
+    }
+    return files;
+  }
 
   getImagesToDisplay() {
     if (this.post.images.length <= 11)
@@ -36,8 +64,13 @@ export class PostComponent {
 
   toggleEditing() {
     if (this.editing) {
-      this.postService.addPost(this.post)
-        .subscribe();
+      this.postService.addPost(
+        {
+          id: this.post.id,
+          content: this.contentInput?.value,
+          images: [] as ImageDTO[]  
+        } as PostDTO)
+        .subscribe(() => { this.post.content = this.contentInput?.value });
     }
     this.editing = !this.editing
   }
@@ -47,21 +80,16 @@ export class PostComponent {
   }
 
   handleEnter(event: KeyboardEvent) {
-    if (event.key == "Enter") {
+    if (event.key == "Enter" && this.postForm.valid) {
       this.toggleEditing();
     }
-  }
-
-  //returns the all images data url from post.images
-  //with prefix assets/images/
-  getImagesDataUrl() {
-    return this.post.images.map((image: ImageDTO) => `assets/images/${image.path}`);
   }
 
   //save all newFiles with imageService.saveToLocal
   //then save to database with imageService.saveToDatabase
   //then push all new images to post.images
   addImages(newFiles: File[]) {
+    console.log("added");
     this.imageService.saveToLocal(newFiles)
       .subscribe((imageNames: string[]) => {
         let imagesToSave = imageNames.map((imageName: string) => {
@@ -83,8 +111,12 @@ export class PostComponent {
   //remove the image from post.images with the index given
   //also delete the image with imageService.deleteImage
   removeImage(index: number) {
+    console.log("removed");
     let imageToDelete = this.post.images[index];
-    this.post.images.splice(index, 1);
+    this.post.images = [
+      ...this.post.images.slice(0, index),
+      ...this.post.images.slice(index + 1)
+    ];
     this.imageService.deleteImage(imageToDelete.path)
       .subscribe();
   }

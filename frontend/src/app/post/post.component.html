@@ -17,15 +17,37 @@
         </div>
     </div>
     <ng-template #newContent class="relative">
-        <textarea #newContentInput type="text"
-            class="bg-slate-500 w-full p-1 resize-none rounded-lg mt-4 break-all placeholder-white"
-            [(ngModel)]="post.content" (keypress)="handleEnter($event)" maxlength="500" rows="4"
-            placeholder="Write something"></textarea>
-        <dropzone [imagesDataUrl]="getImagesDataUrl()" (addedFiles)="addImages($event)"
-            (removedFile)="removeImage($event)"></dropzone>
+        <form [formGroup]="postForm">
+            <textarea formControlName="content" #newContentInput rows="3"
+                class="bg-slate-500 w-full p-1 resize-none rounded-lg mt-4 break-all placeholder-white"
+                placeholder="Write something" (keydown)="handleEnter($event)"></textarea>
+            <div class="text-red-500 font-normal">
+                <small *ngIf="contentInput?.hasError('required')">
+                    Content cannot be empty!
+                </small>
+                <small *ngIf="contentInput?.hasError('maxlength')">
+                    Content exceeds 500 characters!
+                </small>
+            </div>
+            <dropzone formControlName="files" class="block mb-1" (imagesAdded)="addImages($event)"
+                (imageRemoved)="removeImage($event)"></dropzone>
+            <div class="text-red-500 font-normal">
+                <small *ngIf="filesInput?.hasError('required')">
+                    Select at least one file!
+                </small>
+                <small *ngIf="filesInput?.hasError('maxlength')">
+                    You can only select at most {{maxFilesLength}} files!
+                </small>
+                <small *ngIf="filesInput?.hasError('maxSize')">
+                    Your current files exceeds {{maxFilesSize/(1024*1024)}} MB!
+                </small>
+            </div>
+        </form>
     </ng-template>
     <div class="absolute right-1 top-1" *ngIf="showButton || editing">
-        <button type="button" class="hover:bg-indigo-600 p-1 rounded-md" (click)="toggleEditing()">
+        <button type="button"
+            class="hover:bg-indigo-600 p-1 rounded-md disabled:hover:bg-gray-500 disabled:cursor-not-allowed"
+            (click)="toggleEditing()" [disabled]="editing && postForm.invalid">
             <svg *ngIf="!editing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="w-5 h-5">
                 <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 

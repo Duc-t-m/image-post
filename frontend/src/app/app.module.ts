@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { PostComponent } from './post/post.component';
 import { AddPostComponent } from './add-post/add-post.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-import { FormsModule } from '@angular/forms';
 import { DeletePostComponent } from './delete-post/delete-post.component';
 import { WebcamComponent } from './webcam/webcam-test.component';
 import { PaginationComponent } from './pagination/pagination.component';
@@ -23,13 +23,13 @@ import { DropzoneComponent } from './dropzone/dropzone.component';
     PaginationComponent,
     ImagePreviewComponent,
     PostLoadingComponent,
-    DropzoneComponent
+    DropzoneComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     NgxDropzoneModule,
-    FormsModule
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
-<div class="border-t border-gray-200 bg-slate-700 px-4 py-3 sm:px-6 rounded-lg">
-    <div class="flex flex-1 justify-between sm:hidden">
+<div class="border-t border-gray-200 bg-slate-700 px-4 py-3 sm:px-6 rounded-lg min-h-fit">
+    <div class="flex flex-1 justify-between min-[720px]:hidden">
         <button type="button"
             class="relative inline-flex items-center rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 "
             (click)="changePage(this.pagination.page-1)" [class.hover:bg-indigo-600]="pagination.page!=0"
@@ -15,7 +15,7 @@
             Next
         </button>
     </div>
-    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+    <div class="hidden min-[720px]:flex min-[720px]:flex-1 min-[720px]:items-center min-[720px]:justify-between">
         <div>
             <p class="text-sm text-white" *ngIf="pagination.totalElements">
                 Showing
@@ -28,7 +28,17 @@
             </p>
         </div>
         <div>
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm items-stretch" aria-label="Pagination">
+                <span *ngIf="pagination.totalElements>3" for="size" class="text-white hidden lg:flex items-center">Page size</span>
+                <span class="w-2"></span>
+                <select *ngIf="pagination.totalElements>3" class="rounded-lg px-2" (change)="changePageSize($event)">
+                    <option value="3">3</option>
+                    <option *ngIf="pagination.totalElements>5" value="5">5</option>
+                    <option *ngIf="pagination.totalElements>10" value="10">10</option>
+                    <option *ngIf="pagination.totalElements>20" value="20">20</option>
+                    <option [value]="pagination.totalElements">All</option>
+                </select>
+                <span class="w-2"></span>
                 <button type="button"
                     class="relative inline-flex items-center rounded-l-md px-2 py-2 text-white ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0"
                     (click)="changePage(this.pagination.page-1)" [class.hover:bg-indigo-600]="pagination.page!=0"

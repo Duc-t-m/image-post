@@ -71,4 +71,10 @@ export class AppComponent {
     this.pagination.page = newPage;
     this.loadPosts();
   }
+
+  //change page size
+  changePageSize(newSize: number) {
+    this.pagination.size = newSize;
+    this.loadPosts();
+  }
 }

@@ -8,6 +8,7 @@ import { Pagination } from 'src/model/pagination.type';
 export class PaginationComponent {
   @Input() pagination!: Pagination;
   @Output() changePageEvent = new EventEmitter<number>();
+  @Output() changePageSizeEvent = new EventEmitter<number>();
 
   ngOnChanges() {
     if (this.pagination.totalPages < 3) {
@@ -32,6 +33,11 @@ export class PaginationComponent {
 
   changePage(newPage: number) {
     this.changePageEvent.emit(newPage);
+  }
+
+  //emit event to change page size
+  changePageSize(event: Event) {
+    this.changePageSizeEvent.emit(+(event.target as HTMLSelectElement).value);
   }
 
   handleEnter(event: KeyboardEvent) {

@@ -1,11 +1,11 @@
 <div class="fixed inset-0 w-screen h-max min-h-screen z-10 backdrop-blur-sm" (click)="handleClose()"></div>
-<form (ngSubmit)="onSubmit()" class="z-20 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+<form [formGroup]="newPostForm" (ngSubmit)="onSubmit()" class="z-20 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
     bg-slate-800 rounded-lg p-5 text-white font-sans font-semibold w-fit min-[246px]:w-[calc(66.67%+3rem)]">
     <label for="content">Content</label>
     <br>
     <textarea #newContentInput id="content" name="content" rows="3" formControlName="content"
         class="w-full p-2 rounded-lg bg-slate-500 placeholder-white" placeholder="Write something"
-        (change)="markBeforeAsTouched('content')" autofocus></textarea>
+        (change)="markBeforeAsTouched('content')"></textarea>
     <div *ngIf="contentInput?.dirty || contentInput?.touched" class="text-red-500 font-normal">
         <small *ngIf="contentInput?.hasError('required')">
             Content cannot be empty!

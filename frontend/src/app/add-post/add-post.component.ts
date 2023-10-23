@@ -29,11 +29,11 @@ export class AddPostComponent {
     private formBuilder: FormBuilder
   ) { }
 
-  // @ViewChild("newContentInput") set contentRef(ref: ElementRef) {
-  //   if (!!ref) {
-  //     (ref.nativeElement as HTMLTextAreaElement).focus();
-  //   }
-  // }
+  @ViewChild("newContentInput") set contentRef(ref: ElementRef) {
+    if (!!ref) {
+      (ref.nativeElement as HTMLTextAreaElement).focus();
+    }
+  }
 
   handleClose() {
     this.closeModal.emit();

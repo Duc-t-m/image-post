@@ -22,12 +22,8 @@ export class SecurityService {
         localStorage.removeItem('token');
     }
 
-    getToken() {
-        return localStorage.getItem('token');
-    }
-
     isAuthenticated() {
-        const token = this.getToken();
+        const token = localStorage.getItem('token');
         return !this.jwtHelper.isTokenExpired(token);
     }
 

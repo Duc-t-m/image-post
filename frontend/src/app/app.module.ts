@@ -17,6 +17,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor } from 'src/service/jwt.interceptor';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { JwtInterceptor } from 'src/service/jwt.interceptor';
     DropzoneComponent,
     LoginComponent,
     HomeComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,

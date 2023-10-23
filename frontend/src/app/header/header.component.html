@@ -1,0 +1,6 @@
+<nav class="flex items-center justify-star">
+    <a [routerLink]="['/home']" class="hover:bg-indigo-600 p-2 rounded">Home</a>
+</nav>
+<nav class="flex items-center justify-end">
+    <button *ngIf="showLogout" type="button" class="hover:bg-indigo-600 p-2 rounded" (click)="onLogout()">Logout</button>
+</nav>

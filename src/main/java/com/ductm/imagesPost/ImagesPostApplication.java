@@ -7,9 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 public class ImagesPostApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ImagesPostApplication.class, args);
-	}
-	
+    public static void main(String[] args) {
+        SpringApplication.run(ImagesPostApplication.class, args);
+    }
 
 }

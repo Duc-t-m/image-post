@@ -20,7 +20,7 @@
         <form [formGroup]="postForm">
             <textarea formControlName="content" #newContentInput rows="3"
                 class="bg-slate-500 w-full p-1 resize-none rounded-lg mt-4 break-all placeholder-white"
-                placeholder="Write something" (keydown)="handleEnter($event)"></textarea>
+                placeholder="Write something" (keydown)="handleEnter($event)" autofocus></textarea>
             <div class="text-red-500 font-normal">
                 <small *ngIf="contentInput?.hasError('required')">
                     Content cannot be empty!

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -13,6 +13,11 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { ImagePreviewComponent } from './image-preview/image-preview.component';
 import { PostLoadingComponent } from './post-loading/post-loading.component';
 import { DropzoneComponent } from './dropzone/dropzone.component';
+import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
+import { AppRoutingModule } from './app-routing.module';
+import { JwtInterceptor } from 'src/service/jwt.interceptor';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,14 +29,19 @@ import { DropzoneComponent } from './dropzone/dropzone.component';
     ImagePreviewComponent,
     PostLoadingComponent,
     DropzoneComponent,
+    LoginComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     NgxDropzoneModule,
     ReactiveFormsModule,
+    AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

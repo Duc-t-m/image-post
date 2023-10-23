@@ -5,7 +5,7 @@
     <br>
     <textarea #newContentInput id="content" name="content" rows="3" formControlName="content"
         class="w-full p-2 rounded-lg bg-slate-500 placeholder-white" placeholder="Write something"
-        (change)="markBeforeAsTouched('content')"></textarea>
+        (change)="markBeforeAsTouched('content')" autofocus></textarea>
     <div *ngIf="contentInput?.dirty || contentInput?.touched" class="text-red-500 font-normal">
         <small *ngIf="contentInput?.hasError('required')">
             Content cannot be empty!

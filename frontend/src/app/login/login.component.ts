@@ -10,13 +10,22 @@ import { SecurityService } from 'src/service/security.service';
 })
 export class LoginComponent {
   loginForm = this.formBuilder.group({
-    username: ['', [Validators.required,
-      // Validators.pattern(/^[a-zA-Z0-9]{8,100}$/)
-    ]],
-    password: ['', [Validators.required,
-      // Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,100}$/)
-    ]]
+    username: ['',
+      [
+        Validators.required, 
+        Validators.pattern(/^[a-zA-Z0-9]{8,100}$/)
+      ]
+    ],
+    password: ['',
+      [
+        Validators.required,
+        Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,100}$/)
+      ]
+    ]
   });
+
+  get username() { return this.loginForm.get('username'); }
+  get password() { return this.loginForm.get('password'); }
 
   constructor(
     private securityService: SecurityService,
@@ -25,6 +34,9 @@ export class LoginComponent {
   ) { }
 
   onSubmit() {
+    this.loginForm.markAllAsTouched();
+    if (!this.loginForm.valid)
+      return;
     this.securityService.login(this.loginForm.value as UserDTO)
       .subscribe(
         token => {

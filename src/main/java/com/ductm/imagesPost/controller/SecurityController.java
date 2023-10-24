@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("")
 @AllArgsConstructor
 public class SecurityController {
 
@@ -25,13 +25,11 @@ public class SecurityController {
     private PasswordEncoder passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(SecurityController.class);
 
-    @PostMapping
-    public ResponseEntity<?> authenticateUser(@RequestBody UserDTO userDTO) {
+    @PostMapping("/login")
+    public ResponseEntity<String> authenticateUser(@RequestBody UserDTO userDTO) {
         try {
             UserDetails user = this.userDetailsService.loadUserByUsername(userDTO.getUsername());
-            logger.info(user.getPassword());
-            logger.info(userDTO.getPassword());
-            if (user.getPassword().equals(passwordEncoder.encode(userDTO.getPassword()))) {
+            if (!passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
                 return ResponseEntity.badRequest().body("Wrong password!");
             }
             return ResponseEntity.ok(jwtService.generateToken(user));

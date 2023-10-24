@@ -1,11 +1,12 @@
-<div class="bg-slate-600 w-fit min-[200px]:w-full h-max min-h-screen flex items-start justify-center p-20">
+<div class="bg-slate-600 w-fit min-[230px]:w-full h-max min-h-screen flex items-start justify-center p-20">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"
-        class="flex flex-col text-white gap-2 w-1/2 border-4 border-indigo-600 p-2 shadow-lg shadow-slate-400 rounded-lg">
+        class="flex flex-col text-white gap-2 w-fit md:w-1/2 border-4 border-indigo-600 p-2 shadow-lg shadow-slate-400 rounded-lg">
         <legend class="text-2xl font-bold text-center">Login</legend>
         <label for="username">Username</label>
         <input type="text" id="username" name="username" formControlName="username"
-            class="border-2 border-white rounded p-2 bg-slate-500">
-        <div *ngIf="username?.dirty || username?.touched" class="text-red-500 font-normal">
+            class="border-2 border-white rounded p-2 bg-slate-500"
+            [class.border-red-500]="(username?.dirty || username?.touched) && !username?.valid">
+        <div *ngIf="(username?.dirty || username?.touched) && !username?.valid" class="text-red-500 font-normal">
             <small *ngIf="username?.hasError('required')">
                 Username cannot be empty!
             </small>
@@ -15,14 +16,15 @@
         </div>
         <label for="password">Password</label>
         <input type="password" id="password" name="password" formControlName="password"
-            class="border-2 border-white rounded p-2 bg-slate-500">
-        <div *ngIf="password?.dirty || password?.touched" class="text-red-500 font-normal">
+            class="border-2 border-white rounded p-2 bg-slate-500"
+            [class.border-red-500]="(password?.dirty || password?.touched) && !password?.valid">
+        <div *ngIf="(password?.dirty || password?.touched) && !password?.valid" class="text-red-500 font-normal">
             <small *ngIf="password?.hasError('required')">
                 Password cannot be empty!
             </small>
             <small *ngIf="password?.hasError('pattern')">
                 Password should include at least 1 number, 1 lowercase letter, 1 uppercase letter, 1 special
-                character and have length between 8 and 100 characters!  
+                character and have length between 8 and 100 characters!
             </small>
         </div>
         <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 rounded p-2">Login</button>

@@ -2,11 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { PostComponent } from './post/post.component';
 import { AddPostComponent } from './add-post/add-post.component';
-import { NgxDropzoneModule } from 'ngx-dropzone';
 import { DeletePostComponent } from './delete-post/delete-post.component';
 import { WebcamComponent } from './webcam/webcam-test.component';
 import { PaginationComponent } from './pagination/pagination.component';
@@ -18,6 +19,7 @@ import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor } from 'src/service/jwt.interceptor';
 import { HeaderComponent } from './header/header.component';
+
 
 @NgModule({
   declarations: [
@@ -32,17 +34,27 @@ import { HeaderComponent } from './header/header.component';
     DropzoneComponent,
     LoginComponent,
     HomeComponent,
-    HeaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    NgxDropzoneModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 4000,
+      closeButton: true,
+      positionClass: 'toast-bottom-right',
+      extendedTimeOut: 1000,
+      maxOpened: 3,
+      preventDuplicates: true,
+      countDuplicates: true,
+      resetTimeoutOnDuplicate: true
+    })
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

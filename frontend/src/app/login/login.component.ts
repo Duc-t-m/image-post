@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Component, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { catchError, of, throwError } from 'rxjs';
 import { UserDTO } from 'src/model/user.type';
 import { SecurityService } from 'src/service/security.service';
 
@@ -12,7 +15,7 @@ export class LoginComponent {
   loginForm = this.formBuilder.group({
     username: ['',
       [
-        Validators.required, 
+        Validators.required,
         Validators.pattern(/^[a-zA-Z0-9]{8,100}$/)
       ]
     ],
@@ -23,14 +26,14 @@ export class LoginComponent {
       ]
     ]
   });
-
   get username() { return this.loginForm.get('username'); }
   get password() { return this.loginForm.get('password'); }
 
   constructor(
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
   onSubmit() {
@@ -38,10 +41,18 @@ export class LoginComponent {
     if (!this.loginForm.valid)
       return;
     this.securityService.login(this.loginForm.value as UserDTO)
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          this.toastr.error(err.error, "Error");
+          return of(null);
+        })
+      )
       .subscribe(
         token => {
-          localStorage.setItem('token', token);
-          this.router.navigate(['/home']);
+          if (token) {
+            localStorage.setItem('token', token);
+            this.router.navigate(['/home']);
+          }
         }
       );
   }

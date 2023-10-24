@@ -18,13 +18,9 @@ export class SecurityService {
         return this.http.post(`${this.apiUrl}/login`, user, { responseType: 'text' });
     }
 
-    logout() {
-        localStorage.removeItem('token');
-    }
-
     isAuthenticated() {
         const token = localStorage.getItem('token');
-        return !this.jwtHelper.isTokenExpired(token);
+        return !!token && !this.jwtHelper.isTokenExpired(token);
     }
 
 }

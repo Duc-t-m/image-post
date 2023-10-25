@@ -19,6 +19,7 @@ import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './header/header.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { SignUpComponent } from './sign-up/sign-up.component';
 
 function tokenGetter() {
   return localStorage.getItem("token");
@@ -37,7 +38,8 @@ function tokenGetter() {
     DropzoneComponent,
     LoginComponent,
     HomeComponent,
-    HeaderComponent
+    HeaderComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,

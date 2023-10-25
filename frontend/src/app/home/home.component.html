@@ -1,5 +1,4 @@
-<div
-    class="bg-slate-600 w-fit min-[200px]:w-full h-max min-h-screen flex flex-col gap-2 items-center py-2 justify-start relative pt-[60px]">
+<div class="flex flex-col gap-2 items-center justify-start relative">
     <post *ngFor="let post of posts" [_post]="post"
         class="w-2/3 h-fit min-h-[13rem] border-white border-2 rounded text-white font-sans font-bold relative overflow-auto"
         (removePost)="remove($event)">

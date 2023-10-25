@@ -50,10 +50,14 @@ export class LoginComponent {
       .subscribe(
         token => {
           if (token) {
-            localStorage.setItem('token', token);
+            this.securityService.loginRequestSuccess(token);
             this.router.navigate(['/home']);
           }
         }
       );
+  }
+
+  goToSignUp() {
+    this.router.navigate(['/sign-up']);
   }
 }

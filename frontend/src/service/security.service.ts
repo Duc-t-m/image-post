@@ -25,4 +25,12 @@ export class SecurityService {
         return !!token && !this.jwtHelper.isTokenExpired(token.toString());
     }
 
+    loginRequestSuccess(token: string) {
+        localStorage.setItem('token', token);
+    }
+
+    logout() {
+        localStorage.removeItem('token');
+    }
+
 }

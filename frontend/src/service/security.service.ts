@@ -10,17 +10,19 @@ import { UserDTO } from '../model/user.type';
 export class SecurityService {
 
     apiUrl = 'http://localhost:8080';
-    private jwtHelper = new JwtHelperService();
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private jwtHelper: JwtHelperService
+    ) { }
 
     login(user: UserDTO): Observable<any> {
         return this.http.post(`${this.apiUrl}/login`, user, { responseType: 'text' });
     }
 
     isAuthenticated() {
-        const token = localStorage.getItem('token');
-        return !!token && !this.jwtHelper.isTokenExpired(token);
+        const token = this.jwtHelper.tokenGetter();
+        return !!token && !this.jwtHelper.isTokenExpired(token.toString());
     }
 
 }

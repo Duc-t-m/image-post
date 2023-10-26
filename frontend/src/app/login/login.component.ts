@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, of, throwError } from 'rxjs';
-import { UserDTO } from 'src/model/user.type';
+import { UserLoginDTO } from 'src/model/user.type';
 import { SecurityService } from 'src/service/security.service';
 
 @Component({
@@ -40,7 +40,7 @@ export class LoginComponent {
     this.loginForm.markAllAsTouched();
     if (!this.loginForm.valid)
       return;
-    this.securityService.login(this.loginForm.value as UserDTO)
+    this.securityService.login(this.loginForm.value as UserLoginDTO)
       .pipe(
         catchError((err: HttpErrorResponse) => {
           this.toastr.error(err.error, "Error");
@@ -50,7 +50,7 @@ export class LoginComponent {
       .subscribe(
         token => {
           if (token) {
-            this.securityService.loginRequestSuccess(token);
+            this.securityService.authenticationSuccess(token);
             this.router.navigate(['/home']);
           }
         }

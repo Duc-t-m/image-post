@@ -22,11 +22,14 @@ public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String username;
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String password;
+    @Column(nullable = false)
     private String role;
+    @Column(length = 100, nullable = false)
+    private String email;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

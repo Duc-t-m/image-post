@@ -1,35 +1,91 @@
-<form
-    class="flex flex-col text-white gap-2 min-w-fit w-1/3 mx-auto border-4 border-indigo-600 p-2 shadow-lg shadow-slate-400 rounded-lg">
-    <legend class="text-2xl font-bold text-center">Sign up </legend>
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" class="border-2 border-white rounded p-2 bg-slate-500">
-
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" class="border-2 border-white rounded p-2 bg-slate-500">
-
-    <label for="password2">Confirm Password</label>
-    <input type="password" id="password2" name="password2" class="border-2 border-white rounded p-2 bg-slate-500">
-
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" class="border-2 border-white rounded p-2 bg-slate-500">
-
+<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()"
+    class="flex flex-col text-white gap-2 min-w-[15rem] w-1/3 mx-auto border-4 border-indigo-600 p-2 shadow-lg shadow-slate-400 rounded-lg">
+    <legend class="text-2xl font-bold text-center">Sign up</legend>
+    <label for="username" class="after:content-['*'] after:text-red-500 after:text-lg">Username</label>
+    <input type="text" id="username" name="username" placeholder="username1234" formControlName="username"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+    <div *ngIf="(username?.dirty || username?.touched) && !username?.valid" class="text-red-500">
+        <small *ngIf="username?.hasError('required')">
+            Username is required!
+        </small>
+        <small *ngIf="username?.hasError('pattern')">
+            Username should only include letters, numbers and have length between 8 and 100 characters!
+        </small>
+    </div>
+    <label for="password" class="after:content-['*'] after:text-red-500 after:text-lg">Password</label>
+    <input type="password" id="password" name="password" placeholder="@Password1" formControlName="password"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+    <div *ngIf="(password?.dirty || username?.touched) && !password?.valid" class="text-red-500">
+        <small *ngIf="password?.hasError('required')">
+            Password is required!
+        </small>
+        <small *ngIf="password?.hasError('pattern')">
+            Password should include at least 1 number, 1 lowercase letter, 1 uppercase letter, 1 special character and
+            have length between 8 and 100 characters!
+        </small>
+    </div>
+    <label for="password2" class="after:content-['*'] after:text-red-500 after:text-lg">Confirm Password</label>
+    <input type="password" id="password2" name="password2" placeholder="@Password1" formControlName="password2"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+    <div *ngIf="(password2?.dirty || username?.touched) && !password2?.valid" class="text-red-500">
+        <small *ngIf="password2?.hasError('required')">
+            Please confirm your password!
+        </small>
+        <small *ngIf="password2?.hasError('matchPassword')">
+            Your password and confirmation password do not match!
+        </small>
+    </div>
+    <label for="email" class="after:content-['*'] after:text-red-500 after:text-lg">Email</label>
+    <input type="email" id="email" name="email" placeholder="emailsomething@gmail.com" formControlName="email"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+    <div *ngIf="(email?.dirty || email?.touched) && !email?.valid" class="text-red-500">
+        <small *ngIf="email?.hasError('required')">
+            Email is required!
+        </small>
+        <small *ngIf="email?.hasError('email')">
+            Invalid email!
+        </small>
+    </div>
     <label for="phone">Phone number</label>
-    <input type="phone" id="phone" name="phone" class="border-2 border-white rounded p-2 bg-slate-500">
-
+    <input type="phone" id="phone" name="phone" placeholder="0123456789" formControlName="phone"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+    <div *ngIf="(phone?.dirty || phone?.touched) && !phone?.valid" class="text-red-500">
+        <small *ngIf="phone?.hasError('pattern')">
+            Invalid phone number!
+        </small>
+    </div>
     <p>Date of birth</p>
-    <div class="flex gap-2">
-        <select name="day" id="day" title="day" class="flex-grow rounded bg-slate-500 border-2 border-white">
-            <option disabled selected>Day</option>
+    <div class="flex gap-2 flex-wrap" formGroupName="dob">
+        <select name="day" id="day" title="day" formControlName="day"
+            class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+            <option value="" disabled hidden>-Select day-</option>
             <option *ngFor="let i of days" [value]="i">{{i}}</option>
         </select>
-        <select name="month" id="month" title="month" class="flex-grow rounded bg-slate-500 border-2 border-white">
-            <option disabled selected>Month</option>
+        <select name="month" id="month" title="month" formControlName="month"
+            class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+            <option value="" disabled hidden>-Select month-</option>
             <option *ngFor="let month of months; index as i" [value]="i+1">{{month}}</option>
         </select>
-        <select name="year" id="year" title="year" class="flex-grow rounded bg-slate-500 border-2 border-white">
-            <option disabled selected>Year</option>
+        <select name="year" id="year" title="year" formControlName="year"
+            class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+            <option value="" disabled hidden>-Select year-</option>
+            <option *ngFor="let year of years" [value]="year">{{year}}</option>
         </select>
     </div>
+    <div *ngIf="(dob?.dirty || dob?.touched) && !dob?.valid" class="text-red-500 flex flex-col">
+        <small *ngIf="dob?.hasError('date')">
+            Invalid or insufficient date!
+        </small>
+    </div>
+
+    <label for="gender">Gender</label>
+    <select name="gender" id="gender" title="gender" formControlName="gender"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
+        <option value="" disabled hidden>-Select gender-</option>
+        <option value="0">Male</option>
+        <option value="1">Female</option>
+        <option value="2">Other</option>
+    </select>
 
     <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 rounded p-2">Sign up</button>
 </form>

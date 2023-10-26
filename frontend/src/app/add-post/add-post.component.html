@@ -6,7 +6,7 @@
     <textarea #newContentInput id="content" name="content" rows="3" formControlName="content"
         class="w-full p-2 rounded-lg bg-slate-500 placeholder-white" placeholder="Write something"
         (change)="markBeforeAsTouched('content')"></textarea>
-    <div *ngIf="contentInput?.dirty || contentInput?.touched" class="text-red-500 font-normal">
+    <div *ngIf="contentInput?.dirty || contentInput?.touched" class="text-red-500">
         <small *ngIf="contentInput?.hasError('required')">
             Content cannot be empty!
         </small>
@@ -17,7 +17,7 @@
     <label for="files">Image(s)</label>
     <dropzone id="files" name="files" formControlName="files" class="block mb-1"
         (change)="markBeforeAsTouched('files')"></dropzone>
-    <div *ngIf="filesInput?.dirty || filesInput?.touched" class="text-red-500 font-normal">
+    <div *ngIf="filesInput?.dirty || filesInput?.touched" class="text-red-500">
         <small *ngIf="filesInput?.hasError('required')">
             Select at least one file!
         </small>

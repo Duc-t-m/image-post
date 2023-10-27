@@ -15,7 +15,7 @@
     <label for="password" class="after:content-['*'] after:text-red-500 after:text-lg">Password</label>
     <input type="password" id="password" name="password" placeholder="@Password1" formControlName="password"
         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
-    <div *ngIf="(password?.dirty || username?.touched) && !password?.valid" class="text-red-500">
+    <div *ngIf="(password?.dirty || password?.touched) && !password?.valid" class="text-red-500">
         <small *ngIf="password?.hasError('required')">
             Password is required!
         </small>
@@ -27,7 +27,7 @@
     <label for="password2" class="after:content-['*'] after:text-red-500 after:text-lg">Confirm Password</label>
     <input type="password" id="password2" name="password2" placeholder="@Password1" formControlName="password2"
         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
-    <div *ngIf="(password2?.dirty || username?.touched) && !password2?.valid" class="text-red-500">
+    <div *ngIf="(password2?.dirty || password2?.touched) && !password2?.valid" class="text-red-500">
         <small *ngIf="password2?.hasError('required')">
             Please confirm your password!
         </small>

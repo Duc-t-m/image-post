@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, of } from 'rxjs';
-import { UserSignUpDTO } from 'src/model/user.type';
+import { Profile, UserSignUpDTO } from 'src/model/user.type';
 import { SecurityService } from 'src/service/security.service';
 
 @Component({
@@ -112,6 +112,8 @@ export class SignUpComponent {
 
   onSubmit() {
     this.signUpForm.markAllAsTouched();
+    if (!this.signUpForm.valid)
+      return;
     this.securityService.signUp({
       username: this.username?.value,
       password: this.password?.value,
@@ -128,6 +130,12 @@ export class SignUpComponent {
           this.securityService.authenticationSuccess(token);
           this.toastr.success('Sign up successfully', 'Welcome');
           this.router.navigate(['/home']);
+          this.securityService.addProfile({
+            phone: this.phone?.value,
+            dob: new Date(this.year?.value, this.month?.value, this.day?.value),
+            gender: this.gender?.value
+          } as Profile)
+            .subscribe();
         }
       });
   }

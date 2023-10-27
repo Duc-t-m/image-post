@@ -25,7 +25,7 @@ public class JwtService {
         userDetails.getAuthorities().forEach(authority -> claims.put("role", authority.getAuthority()));
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expiration);
-        
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
@@ -34,12 +34,7 @@ public class JwtService {
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
-
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
+    
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -49,16 +44,17 @@ public class JwtService {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+        final Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         return claimsResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = extractExpiration(token);
         return expiration.before(new Date());
+    }
+
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

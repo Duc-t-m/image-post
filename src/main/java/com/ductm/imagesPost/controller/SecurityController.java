@@ -3,7 +3,8 @@ package com.ductm.imagesPost.controller;
 import com.ductm.imagesPost.configuration.JwtService;
 import com.ductm.imagesPost.dto.UserLoginDTO;
 import com.ductm.imagesPost.dto.UserSignUpDTO;
-import com.ductm.imagesPost.entity.User;
+import com.ductm.imagesPost.entity.Account;
+import com.ductm.imagesPost.mapper.UserAccountMapper;
 import com.ductm.imagesPost.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class SecurityController {
     private UserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
+    private UserAccountMapper userAccountMapper;
     private final Logger logger = LoggerFactory.getLogger(SecurityController.class);
 
     @PostMapping("/login")
@@ -49,12 +51,8 @@ public class SecurityController {
             return ResponseEntity.badRequest().body("Username already exists!");
         } catch (UsernameNotFoundException e) {
             logger.info("Registering user: " + userSignupDTO.getUsername());
-            User user = new User();
-            user.setUsername(userSignupDTO.getUsername());
-            user.setPassword(passwordEncoder.encode(userSignupDTO.getPassword()));
-            user.setEmail(userSignupDTO.getEmail());
-            user.setRole("USER");
-            return ResponseEntity.ok(jwtService.generateToken(userRepository.save(user)));
+            Account account = userRepository.save(userAccountMapper.userSignUpToAccount(userSignupDTO));
+            return ResponseEntity.ok(jwtService.generateToken(userAccountMapper.toUser(account)));
         }
     }
 }

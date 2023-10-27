@@ -16,8 +16,8 @@ export class SecurityService {
         private jwtHelper: JwtHelperService
     ) { }
 
-    login(user: UserLoginDTO): Observable<any> {
-        return this.http.post(`${this.apiUrl}/login`, user, { responseType: 'text' });
+    login(account: UserLoginDTO): Observable<any> {
+        return this.http.post(`${this.apiUrl}/login`, account, { responseType: 'text' });
     }
 
     isAuthenticated() {
@@ -33,8 +33,8 @@ export class SecurityService {
         localStorage.removeItem('token');
     }
 
-    signUp(user: UserSignUpDTO): Observable<any> {
-        return this.http.post(`${this.apiUrl}/sign-up`, user, { responseType: 'text' });
+    signUp(account: UserSignUpDTO): Observable<any> {
+        return this.http.post(`${this.apiUrl}/sign-up`, account, { responseType: 'text' });
     }
 
 }

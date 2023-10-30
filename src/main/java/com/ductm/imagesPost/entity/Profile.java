@@ -13,12 +13,15 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 public class Profile implements Serializable {
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "account_id", nullable = false)
     @Id
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "account_id")
     private Account account;
 
+    @Column(unique = true)
     private String phone;
     private Date dob;
     private Byte gender;

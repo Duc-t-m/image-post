@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, of } from 'rxjs';
-import { Profile, UserSignUpDTO } from 'src/model/user.type';
+import { UserSignUpDTO } from 'src/model/user.type';
 import { SecurityService } from 'src/service/security.service';
 
 @Component({
@@ -25,7 +25,8 @@ export class SignUpComponent {
   }
 
   get years() {
-    return Array(new Date().getFullYear() - 1970 + 1).fill(1970).map((_, i) => 1970 + i);
+    let currentYear = new Date().getFullYear();
+    return Array(currentYear - 1970 + 1).fill(0).map((_, i) => currentYear - i);
   }
 
   signUpForm: FormGroup = this.formBuilder.group({
@@ -79,13 +80,14 @@ export class SignUpComponent {
   }
 
   dateValidator(dob: AbstractControl): ValidationErrors | null {
-    const day = +dob.get("day")?.value;
-    const month = +dob.get("month")?.value;
-    const year = +dob.get("year")?.value;
+    let day = +dob.get("day")?.value;
+    let month = +dob.get("month")?.value;
+    let year = +dob.get("year")?.value;
     //check if day, month, year all equal to 0 or all not equal to 0
     if (!((day == 0 && month == 0 && year == 0) || (day != 0 && month != 0 && year != 0))) {
       return { "date": true };
     }
+
     const month30 = [4, 6, 9, 11];
 
     if (month30.includes(month) && day > 30) {
@@ -114,11 +116,15 @@ export class SignUpComponent {
     this.signUpForm.markAllAsTouched();
     if (!this.signUpForm.valid)
       return;
-    this.securityService.signUp({
-      username: this.username?.value,
-      password: this.password?.value,
-      email: this.email?.value
-    } as UserSignUpDTO)
+    this.securityService.signUp(
+      {
+        username: this.username?.value,
+        password: this.password?.value,
+        email: this.email?.value,
+        phone: this.phone?.value,
+        dob: new Date(this.year?.value, this.month?.value - 1, this.day?.value),
+        gender: this.gender?.value
+      } as UserSignUpDTO)
       .pipe(
         catchError(err => {
           this.toastr.error(err.error, 'Sign up failed');
@@ -130,12 +136,6 @@ export class SignUpComponent {
           this.securityService.authenticationSuccess(token);
           this.toastr.success('Sign up successfully', 'Welcome');
           this.router.navigate(['/home']);
-          this.securityService.addProfile({
-            phone: this.phone?.value,
-            dob: new Date(this.year?.value, this.month?.value, this.day?.value),
-            gender: this.gender?.value
-          } as Profile)
-            .subscribe();
         }
       });
   }

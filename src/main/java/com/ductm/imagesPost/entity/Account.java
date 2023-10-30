@@ -16,19 +16,15 @@ public class Account implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String username;
 
     @Column(length = 100, nullable = false)
     private String password;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(length = 20, nullable = false)
     private String role;
-    
-    @OneToOne(mappedBy = "account", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @PrimaryKeyJoinColumn
-    private Profile profile;
 }

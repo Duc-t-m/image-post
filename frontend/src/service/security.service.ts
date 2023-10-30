@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Profile, UserLoginDTO, UserSignUpDTO } from '../model/user.type';
+import { UserLoginDTO, UserSignUpDTO } from '../model/user.type';
 
 @Injectable({
     providedIn: 'root'
@@ -36,9 +36,4 @@ export class SecurityService {
     signUp(account: UserSignUpDTO): Observable<any> {
         return this.http.post(`${this.apiUrl}/sign-up`, account, { responseType: 'text' });
     }
-
-    addProfile(profile: Profile): Observable<any> {
-        return this.http.post(`${this.apiUrl}/profile`, profile);
-    }
-
 }

@@ -4,7 +4,9 @@ import com.ductm.imagesPost.configuration.JwtService;
 import com.ductm.imagesPost.dto.UserLoginDTO;
 import com.ductm.imagesPost.dto.UserSignUpDTO;
 import com.ductm.imagesPost.entity.Account;
+import com.ductm.imagesPost.entity.Profile;
 import com.ductm.imagesPost.mapper.UserAccountMapper;
+import com.ductm.imagesPost.repository.ProfileRepository;
 import com.ductm.imagesPost.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -28,6 +30,7 @@ public class SecurityController {
     private UserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
+    private ProfileRepository profileRepository;
     private UserAccountMapper userAccountMapper;
     private final Logger logger = LoggerFactory.getLogger(SecurityController.class);
 
@@ -52,6 +55,11 @@ public class SecurityController {
         } catch (UsernameNotFoundException e) {
             logger.info("Registering user: " + userSignupDTO.getUsername());
             Account account = userRepository.save(userAccountMapper.userSignUpToAccount(userSignupDTO));
+            Profile profile = userAccountMapper.userSignUpToProfile(userSignupDTO);
+            if (profile.getPhone() != null || profile.getDob() != null || profile.getGender() != null) {
+                profile.setAccount(account);
+                profileRepository.save(profile);
+            }
             return ResponseEntity.ok(jwtService.generateToken(userAccountMapper.toUser(account)));
         }
     }

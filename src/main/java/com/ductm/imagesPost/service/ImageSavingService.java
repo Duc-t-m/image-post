@@ -11,16 +11,14 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ImageSavingService {
 
     private final Logger logger = LoggerFactory.getLogger(ImageSavingService.class);
 
-    public List<String> saveToLocal(MultipartFile[] images) {
+    public void saveToLocal(MultipartFile[] images, List<Image> imageNames) throws IOException {
         Path path = Paths.get("frontend/src/assets/images");
         //create images folder if not exist
         if (!Files.exists(path)) {
@@ -28,24 +26,17 @@ public class ImageSavingService {
                 Files.createDirectories(path);
             } catch (IOException e) {
                 logger.error(e.getMessage());
+                throw new IOException("Can't create images folder, try again later!");
             }
         }
-        List<String> imageNames = new ArrayList<>();
-        String saveName, originalName;
-        for (MultipartFile f : images) {
-            saveName = UUID.randomUUID().toString();
-            originalName = f.getOriginalFilename();
-            assert originalName != null;
-            saveName += originalName.substring(originalName.lastIndexOf("."));
-
-            try (InputStream fileInputStream = f.getInputStream()) {
-                Files.copy(fileInputStream, path.resolve(saveName));
-                imageNames.add(saveName);
+        for (int i = 0; i < images.length; i++) {
+            try (InputStream fileInputStream = images[i].getInputStream()) {
+                Files.copy(fileInputStream, path.resolve(imageNames.get(i).getPath()));
             } catch (IOException e) {
                 logger.error(e.getMessage());
+                throw new IOException("Can't save images, try again later!");
             }
         }
-        return imageNames;
     }
 
     public void removeFromLocal(List<Image> images) {

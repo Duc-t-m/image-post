@@ -1,4 +1,4 @@
-export type ImageDTO = {
-    path: string,
-    post: number
-}
+// export type ImageDTO = {
+//     path: string,
+//     post: number
+// }

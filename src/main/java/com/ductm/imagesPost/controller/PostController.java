@@ -1,6 +1,7 @@
 package com.ductm.imagesPost.controller;
 
-import com.ductm.imagesPost.dto.PostDTO;
+import com.ductm.imagesPost.dto.NewPostDTO;
+import com.ductm.imagesPost.dto.ViewPostDTO;
 import com.ductm.imagesPost.entity.Image;
 import com.ductm.imagesPost.entity.Post;
 import com.ductm.imagesPost.mapper.PostMapper;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,26 +29,40 @@ public class PostController {
     PostMapper postMapper;
     ImageRepository imageRepository;
     ImageSavingService imageSavingService;
-
     final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @GetMapping("")
-    Page<PostDTO> getAllPost(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size) {
-        return this.postRepository
+    Page<ViewPostDTO> getAllPost(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "3") int size) {
+        return postRepository
                 .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
-                .map(postMapper::toDto);
+                .map(postMapper::toViewDTO);
     }
 
     @PostMapping("")
-    ResponseEntity<Long> addPost(@RequestBody PostDTO postDto) {
-        Post post = this.postMapper.toEntity(postDto);
-        return ResponseEntity.ok(this.postRepository.save(post).getId());
+    ResponseEntity<String> addPost(@RequestBody NewPostDTO newPostDto) {
+        Post post = postRepository.save(postMapper.toEntity(newPostDto));
+        try {
+            imageSavingService.saveToLocal(newPostDto.getImages(), post.getImages());
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+        return ResponseEntity.accepted().body("Post added!");
     }
 
     @DeleteMapping("/{id}")
     void removePost(@PathVariable long id) {
-        List<Image> images = this.imageRepository.findAllByPostId(id);
-        this.postRepository.deleteById(id);
-        this.imageSavingService.removeFromLocal(images);
+        List<Image> images = imageRepository.findAllByPostId(id);
+        postRepository.deleteById(id);
+        imageSavingService.removeFromLocal(images);
+    }
+
+    @PutMapping("/{id}")
+    ResponseEntity<String> updatePost(@PathVariable long id, @RequestBody NewPostDTO newPostDto) {
+        Post post = new Post();
+        post.setId(id);
+        post.setContent(newPostDto.getContent());
+        postRepository.save(post);
+        return ResponseEntity.accepted().body("Post updated!");
     }
 }

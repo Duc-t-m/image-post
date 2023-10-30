@@ -1,8 +1,7 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Validators, FormBuilder } from "@angular/forms";
 import { FileInputValidators } from '@ngx-dropzone/cdk';
-import { ImageDTO } from 'src/model/image.type';
-import { PostDTO } from 'src/model/post.type';
+import { NewPostDTO } from 'src/model/post.type';
 import { ImageService } from 'src/service/image.service';
 import { PostService } from 'src/service/post.service';
 
@@ -50,29 +49,13 @@ export class AddPostComponent {
     }
   }
 
-  //a function to handle the submit event of the form
-  //use imageService.saveToLocal to save the images to local storage
-  //use postService.addPost to add the post to the database
-  //use imageService.saveToDatabase to save the images to the database
-  //then emit the reloadPosts event
   onSubmit() {
     if (!this.submitClicked)
       this.submitClicked = true;
     this.newPostForm.markAllAsTouched();
     if (this.newPostForm.invalid)
       return;
-    this.imageService.saveToLocal(this.filesInput?.value!)
-      .subscribe(imageNames => {
-        this.postService.addPost({ content: this.contentInput?.value } as PostDTO)
-          .subscribe((post) => {
-            let images = imageNames.map(imageName => {
-              return { path: imageName, post } as ImageDTO;
-            });
-            this.imageService.saveToDatabase(images)
-              .subscribe(() => {
-                this.reloadPosts.emit();
-              })
-          })
-      })
+    this.postService.addPost(this.newPostForm.value as NewPostDTO)
+      .subscribe(() => this.reloadPosts.emit());
   }
 }

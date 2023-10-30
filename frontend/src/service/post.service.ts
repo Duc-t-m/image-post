@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PostDTO } from 'src/model/post.type';
+import { NewPostDTO } from 'src/model/post.type';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +16,12 @@ export class PostService {
     return this.http.get(`${this.apiUrl}/posts`, { params: { page, size } });
   }
 
-  addPost(post: PostDTO): Observable<number> {
+  addPost(post: NewPostDTO): Observable<any> {
     return this.http.post<number>(`${this.apiUrl}/posts`, post);
   }
 
-  updatePost(post: PostDTO): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/posts`, post);
+  updatePost(id: number, post: NewPostDTO): Observable<any> {
+    return this.http.put<number>(`${this.apiUrl}/posts/${id}`, post);
   }
 
   deletePost(id: number): Observable<any> {

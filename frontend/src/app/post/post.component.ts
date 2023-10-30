@@ -1,8 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileInputValidators } from '@ngx-dropzone/cdk';
-import { ImageDTO } from 'src/model/image.type';
-import { PostDTO } from 'src/model/post.type';
+import { ViewPostDTO } from 'src/model/post.type';
 import { ImageService } from 'src/service/image.service';
 import { PostService } from 'src/service/post.service';
 
@@ -11,10 +10,10 @@ import { PostService } from 'src/service/post.service';
   templateUrl: './post.component.html'
 })
 export class PostComponent {
-  post: PostDTO = {} as PostDTO;
+  post: ViewPostDTO = {} as ViewPostDTO;
   postForm = {} as FormGroup;
   @Input()
-  set _post(post: PostDTO) {
+  set _post(post: ViewPostDTO) {
     this.post = post;
     this.postForm = this.formBuilder.group({
       content: [this.post.content, [Validators.required, Validators.maxLength(500)]],
@@ -48,9 +47,9 @@ export class PostComponent {
   get images() {
     let files = [] as File[];
     for (let i = 0; i < this.post.images.length; i++) {
-      this.imageService.getFromLocal(this.post.images[i].path)
+      this.imageService.getFromLocal(this.post.images[i])
         .subscribe(file => {
-          files.push(new File([file], this.post.images[i].path));
+          files.push(new File([file], this.post.images[i]));
         });
     }
     return files;
@@ -64,12 +63,7 @@ export class PostComponent {
 
   toggleEditing() {
     if (this.editing) {
-      this.postService.addPost(
-        {
-          id: this.post.id,
-          content: this.contentInput?.value,
-          images: [] as ImageDTO[]  
-        } as PostDTO)
+      this.postService.updatePost(this.post.id, this.postForm.value)
         .subscribe(() => { this.post.content = this.contentInput?.value });
     }
     this.editing = !this.editing
@@ -89,36 +83,35 @@ export class PostComponent {
   //then save to database with imageService.saveToDatabase
   //then push all new images to post.images
   addImages(newFiles: File[]) {
-    console.log("added");
-    this.imageService.saveToLocal(newFiles)
-      .subscribe((imageNames: string[]) => {
-        let imagesToSave = imageNames.map((imageName: string) => {
-          return {
-            path: imageName,
-            post: this.post.id
-          } as ImageDTO
-        });
-        this.imageService.saveToDatabase(imagesToSave)
-          .subscribe(() => {
-            this.post.images = [
-              ...this.post.images,
-              ...imagesToSave
-            ]
-          });
-      });
+    // this.imageService.saveToLocal(newFiles)
+    //   .subscribe((imageNames: string[]) => {
+    //     let imagesToSave = imageNames.map((imageName: string) => {
+    //       return {
+    //         path: imageName,
+    //         post: this.post.id
+    //       } as ImageDTO
+    //     });
+    //     this.imageService.saveToDatabase(imagesToSave)
+    //       .subscribe(() => {
+    //         this.post.images = [
+    //           ...this.post.images,
+    //           ...imagesToSave
+    //         ]
+    //       });
+      // });
   }
 
   //remove the image from post.images with the index given
   //also delete the image with imageService.deleteImage
   removeImage(index: number) {
-    console.log("removed");
-    let imageToDelete = this.post.images[index];
-    this.post.images = [
-      ...this.post.images.slice(0, index),
-      ...this.post.images.slice(index + 1)
-    ];
-    this.imageService.deleteImage(imageToDelete.path)
-      .subscribe();
+    // console.log("removed");
+    // let imageToDelete = this.post.images[index];
+    // this.post.images = [
+    //   ...this.post.images.slice(0, index),
+    //   ...this.post.images.slice(index + 1)
+    // ];
+    // this.imageService.deleteImage(imageToDelete.path)
+    //   .subscribe();
   }
 
   toggleShowButton() {
@@ -136,9 +129,5 @@ export class PostComponent {
 
   toggleShowImagePreview() {
     this.showImagePreview = !this.showImagePreview;
-  }
-
-  getAllImagesToPreview() {
-    return this.post.images.map((image: ImageDTO) => image.path);
   }
 }

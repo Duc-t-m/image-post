@@ -3,9 +3,8 @@ package com.ductm.imagesPost.dto;
 import lombok.Data;
 
 @Data
-public class PostDTO {
-
+public class ViewPostDTO {
     private long id;
     private String content;
-    private ImageDTO[] images;
+    private String[] images;
 }

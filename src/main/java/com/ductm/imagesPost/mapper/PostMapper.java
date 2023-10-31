@@ -7,12 +7,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = ImageMapper.class)
-public abstract class PostMapper {
+public interface PostMapper {
 
     @Mapping(target = "id", ignore = true)
-    public abstract Post toEntity(NewPostDTO newPostDto);
+    Post toEntity(NewPostDTO newPostDto);
 
-    public abstract ViewPostDTO toViewDTO(Post post);
+    ViewPostDTO toViewDTO(Post post);
 
 
 }

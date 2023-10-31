@@ -4,22 +4,22 @@
     <label for="username" class="after:content-['*'] after:text-red-500 after:text-lg">Username</label>
     <input type="text" id="username" name="username" placeholder="username1234" formControlName="username"
         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
-    <div *ngIf="(username?.dirty || username?.touched) && !username?.valid" class="text-red-500">
-        <small *ngIf="username?.hasError('required')">
+    <div *ngIf="(username.dirty || username.touched) && !username.valid" class="text-red-500">
+        <small *ngIf="username.hasError('required')">
             Username is required!
         </small>
-        <small *ngIf="username?.hasError('pattern')">
+        <small *ngIf="username.hasError('pattern')">
             Username should only include letters, numbers and have length between 8 and 100 characters!
         </small>
     </div>
     <label for="password" class="after:content-['*'] after:text-red-500 after:text-lg">Password</label>
     <input type="password" id="password" name="password" placeholder="@Password1" formControlName="password"
         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
-    <div *ngIf="(password?.dirty || password?.touched) && !password?.valid" class="text-red-500">
-        <small *ngIf="password?.hasError('required')">
+    <div *ngIf="(password.dirty || password.touched) && !password.valid" class="text-red-500">
+        <small *ngIf="password.hasError('required')">
             Password is required!
         </small>
-        <small *ngIf="password?.hasError('pattern')">
+        <small *ngIf="password.hasError('pattern')">
             Password should include at least 1 number, 1 lowercase letter, 1 uppercase letter, 1 special character and
             have length between 8 and 100 characters!
         </small>
@@ -27,30 +27,30 @@
     <label for="password2" class="after:content-['*'] after:text-red-500 after:text-lg">Confirm Password</label>
     <input type="password" id="password2" name="password2" placeholder="@Password1" formControlName="password2"
         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
-    <div *ngIf="(password2?.dirty || password2?.touched) && !password2?.valid" class="text-red-500">
-        <small *ngIf="password2?.hasError('required')">
+    <div *ngIf="(password2.dirty || password2.touched) && (!password2.valid || !signUpForm.valid)" class="text-red-500">
+        <small *ngIf="password2.hasError('required')">
             Please confirm your password!
         </small>
-        <small *ngIf="password2?.hasError('matchPassword')">
+        <small *ngIf="signUpForm.hasError('passwordsNotMatch')">
             Your password and confirmation password do not match!
         </small>
     </div>
     <label for="email" class="after:content-['*'] after:text-red-500 after:text-lg">Email</label>
     <input type="email" id="email" name="email" placeholder="emailsomething@gmail.com" formControlName="email"
         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
-    <div *ngIf="(email?.dirty || email?.touched) && !email?.valid" class="text-red-500">
-        <small *ngIf="email?.hasError('required')">
+    <div *ngIf="(email.dirty || email.touched) && !email.valid" class="text-red-500">
+        <small *ngIf="email.hasError('required')">
             Email is required!
         </small>
-        <small *ngIf="email?.hasError('email')">
+        <small *ngIf="email.hasError('email')">
             Invalid email!
         </small>
     </div>
     <label for="phone">Phone number</label>
     <input type="phone" id="phone" name="phone" placeholder="0123456789" formControlName="phone"
         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5">
-    <div *ngIf="(phone?.dirty || phone?.touched) && !phone?.valid" class="text-red-500">
-        <small *ngIf="phone?.hasError('pattern')">
+    <div *ngIf="(phone.dirty || phone.touched) && !phone.valid" class="text-red-500">
+        <small *ngIf="phone.hasError('pattern')">
             Invalid phone number!
         </small>
     </div>
@@ -73,7 +73,7 @@
         </select>
     </div>
     <div *ngIf="(dob?.dirty || dob?.touched) && !dob?.valid" class="text-red-500 flex flex-col">
-        <small *ngIf="dob?.hasError('date')">
+        <small *ngIf="dob.hasError('date')">
             Invalid or insufficient date!
         </small>
     </div>

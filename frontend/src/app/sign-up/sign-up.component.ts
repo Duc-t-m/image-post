@@ -29,63 +29,66 @@ export class SignUpComponent {
     return Array(currentYear - 1970 + 1).fill(0).map((_, i) => currentYear - i);
   }
 
-  signUpForm: FormGroup = this.formBuilder.group({
-    username: ['', [
-      Validators.required,
-      Validators.pattern(/^[a-zA-Z0-9]{8,100}$/)
-    ]],
-    password: ['', [
-      Validators.required,
-      Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,100}$/)
-    ]],
-    password2: ['', [
-      Validators.required,
-      this.matchingPassword
-    ]],
-    email: ['', [
-      Validators.required,
-      Validators.email
-    ]],
-    phone: ['', [
-      Validators.pattern(/^\d{10}$/)
-    ]],
-    dob: this.formBuilder.group({
-      day: '',
-      month: '',
-      year: '',
-    }, { validators: this.dateValidator }),
-    gender: ''
-  });
+  signUpForm: FormGroup = this.formBuilder.group(
+    {
+      username: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9]{8,100}$/)
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,100}$/)
+      ]],
+      password2: ['', [
+        Validators.required
+      ]],
+      email: ['', [
+        Validators.required,
+        Validators.email
+      ]],
+      phone: ['', [
+        Validators.pattern(/^\d{10}$/)
+      ]],
+      dob: this.formBuilder.group({
+        day: '',
+        month: '',
+        year: '',
+      }, { validators: this.dateValidator }),
+      gender: ''
+    },
+    {
+      validators: this.matchingPassword('password', 'password2')
+    }
+  );
 
   //getters for all form controls
-  get username() { return this.signUpForm.get('username'); }
-  get password() { return this.signUpForm.get('password'); }
-  get password2() { return this.signUpForm.get('password2'); }
-  get email() { return this.signUpForm.get('email'); }
-  get phone() { return this.signUpForm.get('phone'); }
-  get dob() { return this.signUpForm.get('dob'); }
-  get day() { return this.signUpForm.get('dob.day'); }
-  get month() { return this.signUpForm.get('dob.month'); }
-  get year() { return this.signUpForm.get('dob.year'); }
-  get gender() { return this.signUpForm.get('gender'); }
+  get username() { return this.signUpForm.get('username') as AbstractControl; }
+  get password() { return this.signUpForm.get('password') as AbstractControl; }
+  get password2() { return this.signUpForm.get('password2') as AbstractControl; }
+  get email() { return this.signUpForm.get('email') as AbstractControl; }
+  get phone() { return this.signUpForm.get('phone') as AbstractControl; }
+  get dob() { return this.signUpForm.get('dob') as AbstractControl; }
+  get day() { return this.signUpForm.get('dob.day') as AbstractControl; }
+  get month() { return this.signUpForm.get('dob.month') as AbstractControl; }
+  get year() { return this.signUpForm.get('dob.year') as AbstractControl; }
+  get gender() { return this.signUpForm.get('gender') as AbstractControl; }
 
-
-  matchingPassword(password2: AbstractControl): ValidationErrors | null {
-    const password = password2.parent?.get("password");
-
-    if (password2.value !== password?.value) {
-      return { 'matchPassword': true };
+  matchingPassword(passwordControlName: string, password2ControlName: string): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const { value: password } = formGroup.get(passwordControlName) as AbstractControl;
+      const { value: password2 } = formGroup.get(password2ControlName) as AbstractControl;
+      if (password2 != password)
+        return { 'passwordsNotMatch': true };
+      return null;
     }
-    return null;
   }
-
   dateValidator(dob: AbstractControl): ValidationErrors | null {
     let day = +dob.get("day")?.value;
     let month = +dob.get("month")?.value;
     let year = +dob.get("year")?.value;
     //check if day, month, year all equal to 0 or all not equal to 0
     if (!((day == 0 && month == 0 && year == 0) || (day != 0 && month != 0 && year != 0))) {
-      return { "date": true };
+      return { 'date': true };
     }
 
     const month30 = [4, 6, 9, 11];
@@ -116,14 +119,22 @@ export class SignUpComponent {
     this.signUpForm.markAllAsTouched();
     if (!this.signUpForm.valid)
       return;
+
+    let birthDate: Date | null = new Date(this.year.value, this.month.value - 1, this.day.value);
+    if (this.year.value.length == 0)
+      birthDate = null;
+    let phoneNumber = this.phone.value;
+    if (phoneNumber.length == 0)
+      phoneNumber = null;
+
     this.securityService.signUp(
       {
-        username: this.username?.value,
-        password: this.password?.value,
-        email: this.email?.value,
-        phone: this.phone?.value,
-        dob: new Date(this.year?.value, this.month?.value - 1, this.day?.value),
-        gender: this.gender?.value
+        username: this.username.value,
+        password: this.password.value,
+        email: this.email.value,
+        phone: phoneNumber,
+        dob: birthDate,
+        gender: this.gender.value
       } as UserSignUpDTO)
       .pipe(
         catchError(err => {

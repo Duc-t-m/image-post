@@ -56,7 +56,7 @@ public class SecurityController {
             logger.info("Registering user: " + userSignupDTO.getUsername());
             Account account = userRepository.save(userAccountMapper.userSignUpToAccount(userSignupDTO));
             Profile profile = userAccountMapper.userSignUpToProfile(userSignupDTO);
-            if (profile.getPhone() != null || profile.getDob() != null || profile.getGender() != null) {
+            if (!profile.getPhone().isEmpty() || profile.getDob() != null || profile.getGender() != null) {
                 profile.setAccount(account);
                 profileRepository.save(profile);
             }

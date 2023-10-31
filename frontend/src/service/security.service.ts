@@ -36,4 +36,8 @@ export class SecurityService {
     signUp(account: UserSignUpDTO): Observable<any> {
         return this.http.post(`${this.apiUrl}/sign-up`, account, { responseType: 'text' });
     }
+
+    checkFieldExists(field: string, value: string): Observable<boolean> {
+        return this.http.post<boolean>(`${this.apiUrl}/check/${field}`, value);
+    }
 }

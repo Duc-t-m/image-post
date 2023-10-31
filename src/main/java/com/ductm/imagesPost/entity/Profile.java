@@ -21,8 +21,9 @@ public class Profile implements Serializable {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 20)
     private String phone;
+    @Column(columnDefinition = "DATE")
     private Date dob;
     private Byte gender;
 }

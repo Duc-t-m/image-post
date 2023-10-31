@@ -3,6 +3,7 @@ package com.ductm.imagesPost.configuration;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,6 +29,7 @@ public class WebSecurityConfig {
             .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/sign-up").permitAll()
+                .antMatchers(HttpMethod.POST, "/check/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling()

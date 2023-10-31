@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PostService } from '../../service/post.service';
-import { PostDTO } from "../../model/post.type"
+import { ViewPostDTO } from "../../model/post.type"
 import { Pagination } from 'src/model/pagination.type';
 import { catchError, of, retry } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { catchError, of, retry } from 'rxjs';
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
-  posts: PostDTO[] = [];
+  posts: ViewPostDTO[] = [];
   showAdd = false;
   usingCam = false;
   pagination = {

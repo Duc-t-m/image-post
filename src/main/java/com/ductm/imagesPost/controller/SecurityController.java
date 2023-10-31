@@ -6,8 +6,8 @@ import com.ductm.imagesPost.dto.UserSignUpDTO;
 import com.ductm.imagesPost.entity.Account;
 import com.ductm.imagesPost.entity.Profile;
 import com.ductm.imagesPost.mapper.UserAccountMapper;
+import com.ductm.imagesPost.repository.AccountRepository;
 import com.ductm.imagesPost.repository.ProfileRepository;
-import com.ductm.imagesPost.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.function.Function;
 
 @RestController
 @RequestMapping("")
@@ -29,7 +28,7 @@ public class SecurityController {
     private JwtService jwtService;
     private UserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     private ProfileRepository profileRepository;
     private UserAccountMapper userAccountMapper;
     private final Logger logger = LoggerFactory.getLogger(SecurityController.class);
@@ -49,18 +48,32 @@ public class SecurityController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<String> registerUser(@RequestBody UserSignUpDTO userSignupDTO) {
-        try {
-            userDetailsService.loadUserByUsername(userSignupDTO.getUsername());
-            return ResponseEntity.badRequest().body("Username already exists!");
-        } catch (UsernameNotFoundException e) {
-            logger.info("Registering user: " + userSignupDTO.getUsername());
-            Account account = userRepository.save(userAccountMapper.userSignUpToAccount(userSignupDTO));
-            Profile profile = userAccountMapper.userSignUpToProfile(userSignupDTO);
-            if (!profile.getPhone().isEmpty() || profile.getDob() != null || profile.getGender() != null) {
-                profile.setAccount(account);
-                profileRepository.save(profile);
-            }
-            return ResponseEntity.ok(jwtService.generateToken(userAccountMapper.toUser(account)));
+        logger.info("Registering user: " + userSignupDTO.getUsername());
+        Account account = accountRepository.save(userAccountMapper.userSignUpToAccount(userSignupDTO));
+        Profile profile = userAccountMapper.userSignUpToProfile(userSignupDTO);
+        if (profile.getPhone() != null || profile.getDob() != null || profile.getGender() != null) {
+            profile.setAccount(account);
+            profileRepository.save(profile);
         }
+        return ResponseEntity.ok(jwtService.generateToken(userAccountMapper.toUser(account)));
+    }
+
+    @PostMapping("/check/{field}")
+    public ResponseEntity<Boolean> checkFieldExists(@PathVariable String field, @RequestBody String value) {
+        Function<String, Boolean> checkFunc;
+        switch (field) {
+            case "username":
+                checkFunc = accountRepository::existsByUsername;
+                break;
+            case "email":
+                checkFunc = accountRepository::existsByEmail;
+                break;
+            case "phone":
+                checkFunc = profileRepository::existsByPhone;
+                break;
+            default:
+                return ResponseEntity.badRequest().body(false);
+        }
+        return ResponseEntity.ok(checkFunc.apply(value));
     }
 }

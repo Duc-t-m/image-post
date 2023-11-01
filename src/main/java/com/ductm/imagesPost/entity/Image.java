@@ -17,7 +17,7 @@ public class Image implements Serializable {
     private long id;
 
     private String path;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;

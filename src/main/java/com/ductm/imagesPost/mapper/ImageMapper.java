@@ -1,7 +1,9 @@
 package com.ductm.imagesPost.mapper;
 
 import com.ductm.imagesPost.entity.Image;
+import com.ductm.imagesPost.entity.Post;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public abstract class ImageMapper {
+    static ImageMapper INSTANCE = Mappers.getMapper(ImageMapper.class);
 
     public String[] toPaths(List<Image> images) {
         String[] result = new String[images.size()];
@@ -19,7 +22,7 @@ public abstract class ImageMapper {
         return result;
     }
 
-    public List<Image> toImages(MultipartFile[] files) {
+    public List<Image> toImages(MultipartFile[] files, Post post) {
         List<Image> result = new ArrayList<>();
         String saveName, originalName;
         Image image;
@@ -30,6 +33,7 @@ public abstract class ImageMapper {
             assert originalName != null;
             saveName += originalName.substring(originalName.lastIndexOf("."));
             image.setPath(saveName);
+            image.setPost(post);
             result.add(image);
         }
         return result;

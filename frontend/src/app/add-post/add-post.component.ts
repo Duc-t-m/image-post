@@ -53,9 +53,12 @@ export class AddPostComponent {
     if (!this.submitClicked)
       this.submitClicked = true;
     this.newPostForm.markAllAsTouched();
-    if (this.newPostForm.invalid)
+    if (!this.newPostForm.valid)
       return;
-    this.postService.addPost(this.newPostForm.value as NewPostDTO)
+    this.postService.addPost({
+      content: this.newPostForm.value.content || '',
+      images: this.newPostForm.value.files || []
+    } as NewPostDTO)
       .subscribe(() => this.reloadPosts.emit());
   }
 }

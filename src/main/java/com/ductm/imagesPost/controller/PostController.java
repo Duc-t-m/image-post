@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,14 +41,15 @@ public class PostController {
     }
 
     @PostMapping("")
-    ResponseEntity<String> addPost(@RequestBody NewPostDTO newPostDto) {
+    ResponseEntity<String> addPost(@RequestPart String content, @RequestPart MultipartFile[] images) {
+        NewPostDTO newPostDto = new NewPostDTO(content, images);
         Post post = postRepository.save(postMapper.toEntity(newPostDto));
         try {
             imageSavingService.saveToLocal(newPostDto.getImages(), post.getImages());
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body("Error when saving images, try again later!");
         }
-        return ResponseEntity.accepted().body("Post added!");
+        return ResponseEntity.ok("Post added!");
     }
 
     @DeleteMapping("/{id}")

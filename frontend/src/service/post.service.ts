@@ -16,8 +16,11 @@ export class PostService {
     return this.http.get(`${this.apiUrl}/posts`, { params: { page, size } });
   }
 
-  addPost(post: NewPostDTO): Observable<any> {
-    return this.http.post<number>(`${this.apiUrl}/posts`, post);
+  addPost(post: NewPostDTO): Observable<string> {
+    const formData = new FormData();
+    formData.append('content', post.content);
+    post.images.forEach(image => formData.append('images', image));
+    return this.http.post<string>(`${this.apiUrl}/posts`, formData, { responseType: 'text' as 'json' });
   }
 
   updatePost(id: number, post: NewPostDTO): Observable<any> {

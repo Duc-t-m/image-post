@@ -24,7 +24,8 @@ export class PostService {
   }
 
   updatePost(id: number, post: NewPostDTO): Observable<any> {
-    return this.http.put<number>(`${this.apiUrl}/posts/${id}`, post);
+    const formData = new FormData();
+    return this.http.put<string>(`${this.apiUrl}/posts/${id}`, post, { responseType: 'text' as 'json' });
   }
 
   deletePost(id: number): Observable<any> {

@@ -33,8 +33,8 @@ public class PostController {
     final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @GetMapping("")
-    Page<ViewPostDTO> getAllPost(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "3") int size) {
+    Page<ViewPostDTO> getPage(@RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "3") int size) {
         return postRepository
                 .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
                 .map(postMapper::toViewDTO);
@@ -65,6 +65,6 @@ public class PostController {
         post.setId(id);
         post.setContent(newPostDto.getContent());
         postRepository.save(post);
-        return ResponseEntity.accepted().body("Post updated!");
+        return ResponseEntity.ok("Post updated!");
     }
 }

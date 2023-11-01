@@ -49,13 +49,4 @@ public class ImageSavingService {
             }
         }
     }
-
-    public void removeOneFromLocal(String image) {
-        Path path = Paths.get("frontend/src/assets/images");
-        try {
-            Files.deleteIfExists(path.resolve(image));
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }

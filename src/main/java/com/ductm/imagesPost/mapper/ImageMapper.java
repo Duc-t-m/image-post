@@ -14,7 +14,19 @@ import java.util.UUID;
 public abstract class ImageMapper {
     static ImageMapper INSTANCE = Mappers.getMapper(ImageMapper.class);
 
-    public String[] toPaths(List<Image> images) {
+    public List<Image> pathsToImages(String[] paths, Post post) {
+        List<Image> result = new ArrayList<>();
+        Image image;
+        for (String path : paths) {
+            image = new Image();
+            image.setPath(path);
+            image.setPost(post);
+            result.add(image);
+        }
+        return result;
+    }
+
+    public String[] imagesToPaths(List<Image> images) {
         String[] result = new String[images.size()];
         for (int i = 0; i < images.size(); i++) {
             result[i] = images.get(i).getPath();
@@ -22,7 +34,7 @@ public abstract class ImageMapper {
         return result;
     }
 
-    public List<Image> toImages(MultipartFile[] files, Post post) {
+    public List<Image> filesToImages(MultipartFile[] files, Post post) {
         List<Image> result = new ArrayList<>();
         String saveName, originalName;
         Image image;

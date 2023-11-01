@@ -58,7 +58,7 @@ export class HomeComponent {
 
   remove(id: number) {
     this.postService.deletePost(id)
-      .subscribe(data => {
+      .subscribe(() => {
         this.loadPosts();
       });
   }

@@ -3,7 +3,6 @@ package com.ductm.imagesPost.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@SelectBeforeUpdate(value = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

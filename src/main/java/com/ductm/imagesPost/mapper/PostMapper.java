@@ -14,7 +14,7 @@ public abstract class PostMapper {
     public Post toEntity(NewPostDTO newPostDto) {
         Post post = new Post();
         post.setContent(newPostDto.getContent());
-        post.setImages(ImageMapper.INSTANCE.toImages(newPostDto.getImages(), post));
+        post.setImages(ImageMapper.INSTANCE.filesToImages(newPostDto.getImages(), post));
         return post;
     }
 

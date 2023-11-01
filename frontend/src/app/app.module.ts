@@ -13,7 +13,6 @@ import { WebcamComponent } from './webcam/webcam-test.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { ImagePreviewComponent } from './image-preview/image-preview.component';
 import { PostLoadingComponent } from './post-loading/post-loading.component';
-import { DropzoneComponent } from './dropzone/dropzone.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -35,7 +34,6 @@ function tokenGetter() {
     PaginationComponent,
     ImagePreviewComponent,
     PostLoadingComponent,
-    DropzoneComponent,
     LoginComponent,
     HomeComponent,
     HeaderComponent,

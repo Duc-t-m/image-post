@@ -37,19 +37,14 @@ export class PostComponent {
       ]]
     });
   };
-
   @Output() removePost: EventEmitter<number> = new EventEmitter();
-
   @ViewChild("newContentInput")
   set contentRef(ref: ElementRef) {
     if (!!ref)
       ref.nativeElement.focus();
   }
-
   get contentInput() { return this.postForm.get('content') as AbstractControl; }
   get filesInput() { return this.postForm.get('files') as AbstractControl; }
-  //a function use imageService.getFromLocal to get the images from local storage
-  //then return the images
   get images() {
     let files = [] as File[];
     for (let i = 0; i < this.post.images.length; i++) {
@@ -74,16 +69,24 @@ export class PostComponent {
 
   toggleEditing() {
     if (this.editing) {
-      this.postService.updatePost(this.post.id, this.postForm.value)
+      this.postService.updatePost(this.post.id, this.contentInput.value)
         .subscribe(() => {
-          this.post.content = this.postForm.value.content;
+          this.post.content = this.contentInput.value;
           console.log(this.imagesToAdd);
           console.log(this.imagesToRemove);
-          // this.imageService.updateImages(this.post.id, this.imagesToAdd, this.imagesToRemove)
-          //   .subscribe((images) => {
-          //     this.post.images = images;
-          //   });
+          this.imageService.updateImages(
+            this.post.id,
+            this.imagesToAdd,
+            this.imagesToRemove
+          )
+            .subscribe((images) => {
+              this.imagesToRemove.forEach(image => this.post.images.splice(this.post.images.indexOf(image), 1));
+              this.post.images.push(...images);
+              this.imagesToAdd = [];
+              this.imagesToRemove = [];
+            });
         });
+
     }
     this.editing = !this.editing
   }
@@ -99,20 +102,14 @@ export class PostComponent {
   }
 
   addImages(newFiles: File[]) {
-    // this.imagesToAdd.push(...newFiles);
-    console.log(1);
-    this.imagesToAdd = [
-      ...this.imagesToAdd,
-      ...newFiles
-    ]
+    this.imagesToAdd.push(...newFiles);
   }
 
   removeImage(index: number) {
-    // this.imagesToRemove.push(this.post.images[index]);
-    this.imagesToRemove = [
-      ...this.imagesToRemove,
-      this.post.images[index]
-    ]
+    if (index > this.post.images.length - 1)
+      this.imagesToAdd.splice(index - this.post.images.length, 1);
+    else
+      this.imagesToRemove.push(this.post.images[index]);
   }
 
   toggleShowButton() {

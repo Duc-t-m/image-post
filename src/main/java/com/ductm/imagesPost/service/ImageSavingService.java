@@ -49,4 +49,16 @@ public class ImageSavingService {
             }
         }
     }
+
+    //overload removeFromLocal method with a parameter String[] paths
+    public void removeFromLocal(String[] images) {
+        Path path = Paths.get("frontend/src/assets/images");
+        for (String image : images) {
+            try {
+                Files.deleteIfExists(path.resolve(image));
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
 }

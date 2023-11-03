@@ -19,6 +19,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './header/header.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { DropzoneCdkModule } from '@ngx-dropzone/cdk';
+import { DropzoneMaterialModule } from '@ngx-dropzone/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { DropzoneComponent } from './dropzone/dropzone.component';
 
 function tokenGetter() {
   return localStorage.getItem("token");
@@ -37,7 +41,8 @@ function tokenGetter() {
     LoginComponent,
     HomeComponent,
     HeaderComponent,
-    SignUpComponent
+    SignUpComponent,
+    DropzoneComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +65,10 @@ function tokenGetter() {
         tokenGetter: tokenGetter,
         allowedDomains: ["localhost:8080"]
       }
-    })
+    }),
+    DropzoneCdkModule,
+    DropzoneMaterialModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -60,10 +60,10 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<String> updatePost(@PathVariable long id, @RequestBody NewPostDTO newPostDto) {
+    ResponseEntity<String> updatePost(@PathVariable long id, @RequestBody String content) {
         Post post = new Post();
         post.setId(id);
-        post.setContent(newPostDto.getContent());
+        post.setContent(content);
         postRepository.save(post);
         return ResponseEntity.ok("Post updated!");
     }

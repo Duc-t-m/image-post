@@ -4,27 +4,26 @@
     <label for="content">Content</label>
     <br>
     <textarea #newContentInput id="content" name="content" rows="3" formControlName="content"
-        class="w-full p-2 rounded-lg bg-slate-500 placeholder-white" placeholder="Write something"
-        (change)="markBeforeAsTouched('content')"></textarea>
-    <div *ngIf="contentInput?.dirty || contentInput?.touched" class="text-red-500">
-        <small *ngIf="contentInput?.hasError('required')">
+        class="w-full p-2 rounded-lg bg-slate-500 placeholder-white" placeholder="Write something">
+    </textarea>
+    <div *ngIf="contentInput.dirty || contentInput.touched" class="text-red-500">
+        <small *ngIf="contentInput.hasError('required')">
             Content cannot be empty!
         </small>
-        <small *ngIf="contentInput?.hasError('maxlength')">
+        <small *ngIf="contentInput.hasError('maxlength')">
             Content exceeds 500 characters!
         </small>
     </div>
-    <label for="files">Image(s)</label>
-    <dropzone id="files" name="files" formControlName="files" class="block mb-1"
-        (change)="markBeforeAsTouched('files')"></dropzone>
-    <div *ngIf="filesInput?.dirty || filesInput?.touched" class="text-red-500">
-        <small *ngIf="filesInput?.hasError('required')">
+    <p>Images</p>
+    <dropzone formControlName="files"></dropzone>
+    <div *ngIf="filesInput.dirty || filesInput.touched" class="text-red-500">
+        <small *ngIf="filesInput.hasError('required')">
             Select at least one file!
         </small>
-        <small *ngIf="filesInput?.hasError('maxlength')">
+        <small *ngIf="filesInput.hasError('maxlength')">
             You can only select at most {{maxFilesLength}} files!
         </small>
-        <small *ngIf="filesInput?.hasError('maxSize')">
+        <small *ngIf="filesInput.hasError('maxSize')">
             Your current files exceeds {{maxFilesSize/(1024*1024)}} MB!
         </small>
     </div>

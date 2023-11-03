@@ -23,9 +23,8 @@ export class PostService {
     return this.http.post<string>(`${this.apiUrl}/posts`, formData, { responseType: 'text' as 'json' });
   }
 
-  updatePost(id: number, post: NewPostDTO): Observable<any> {
-    const formData = new FormData();
-    return this.http.put<string>(`${this.apiUrl}/posts/${id}`, post, { responseType: 'text' as 'json' });
+  updatePost(id: number, content: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/posts/${id}`, content, { responseType: 'text' as 'json' });
   }
 
   deletePost(id: number): Observable<any> {

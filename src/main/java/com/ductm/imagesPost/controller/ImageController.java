@@ -10,10 +10,8 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -29,26 +27,29 @@ public class ImageController {
     PostRepository postRepository;
     final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
-    @PostMapping("")
+    @PostMapping("/{postId}")
     ResponseEntity<?> updateImages(
-            @RequestPart String postId,
-            @RequestPart MultipartFile[] imagesToAdd,
-            @RequestPart String[] imagesToRemove
+            @PathVariable long postId,
+            @RequestPart @Nullable MultipartFile[] imagesToAdd,
+            @RequestPart @Nullable String[] imagesToRemove
     ) {
-        long id = Long.parseLong(postId);
-        Post post = postRepository.getReferenceById(id);
+        Post post = postRepository.getReferenceById(postId);
+        if (imagesToAdd == null)
+            imagesToAdd = new MultipartFile[0];
+        if (imagesToRemove == null)
+            imagesToRemove = new String[0];
 
         List<Image> newImages = imageRepository.saveAll(imageMapper.filesToImages(imagesToAdd, post));
-        List<Image> deletedImages = imageMapper.pathsToImages(imagesToRemove, post);
-        imageRepository.deleteAll(deletedImages);
-        
+        if (imagesToRemove.length > 0)
+            imageRepository.deleteByPathIn(imagesToRemove);
+
         try {
             this.imageSavingService.saveToLocal(imagesToAdd, newImages);
-            this.imageSavingService.removeFromLocal(deletedImages);
+            this.imageSavingService.removeFromLocal(imagesToRemove);
         } catch (Exception e) {
             logger.error("Error when updating images, try again later!");
             return ResponseEntity.internalServerError().body("Error when updating images, try again later!");
         }
-        return ResponseEntity.ok(imageMapper.imagesToPaths(imageRepository.findAllByPostId(id)));
+        return ResponseEntity.ok(imageMapper.imagesToPaths(newImages));
     }
 }

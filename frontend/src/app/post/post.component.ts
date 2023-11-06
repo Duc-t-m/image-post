@@ -19,8 +19,6 @@ export class PostComponent {
   showButton = false;
   showImagePreview = false;
   imageToPreviewIndex = -1;
-  imagesToAdd: File[] = [];
-  imagesToRemove: string[] = [];
 
   @Input()
   set _post(post: ViewPostDTO) {
@@ -49,8 +47,8 @@ export class PostComponent {
     let files = [] as File[];
     for (let i = 0; i < this.post.images.length; i++) {
       this.imageService.getFromLocal(this.post.images[i])
-        .subscribe(file => {
-          files.push(new File([file], this.post.images[i]));
+        .subscribe((file: File) => {
+          files.push(file);
         });
     }
     return files;
@@ -69,24 +67,15 @@ export class PostComponent {
 
   toggleEditing() {
     if (this.editing) {
-      this.postService.updatePost(this.post.id, this.contentInput.value)
-        .subscribe(() => {
+      this.postService.updatePost(
+        this.post.id,
+        this.contentInput.value,
+        this.filesInput.value
+      )
+        .subscribe((images) => {
           this.post.content = this.contentInput.value;
-          console.log(this.imagesToAdd);
-          console.log(this.imagesToRemove);
-          this.imageService.updateImages(
-            this.post.id,
-            this.imagesToAdd,
-            this.imagesToRemove
-          )
-            .subscribe((images) => {
-              this.imagesToRemove.forEach(image => this.post.images.splice(this.post.images.indexOf(image), 1));
-              this.post.images.push(...images);
-              this.imagesToAdd = [];
-              this.imagesToRemove = [];
-            });
+          this.post.images = images;
         });
-
     }
     this.editing = !this.editing
   }
@@ -99,17 +88,6 @@ export class PostComponent {
     if (event.key == "Enter" && this.postForm.valid) {
       this.toggleEditing();
     }
-  }
-
-  addImages(newFiles: File[]) {
-    this.imagesToAdd.push(...newFiles);
-  }
-
-  removeImage(index: number) {
-    if (index > this.post.images.length - 1)
-      this.imagesToAdd.splice(index - this.post.images.length, 1);
-    else
-      this.imagesToRemove.push(this.post.images[index]);
   }
 
   toggleShowButton() {

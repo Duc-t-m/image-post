@@ -29,8 +29,7 @@
                     Content exceeds 500 characters!
                 </small>
             </div>
-            <dropzone formControlName="files" class="block mb-1" (imagesAdded)="addImages($event)"
-                (imageRemoved)="removeImage($event)" [editing]="true"></dropzone>
+            <dropzone formControlName="files" class="block mb-1"></dropzone>
             <div class="text-red-500">
                 <small *ngIf="filesInput.hasError('required')">
                     Select at least one file!

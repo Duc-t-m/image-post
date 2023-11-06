@@ -15,11 +15,10 @@ import java.util.List;
 
 @Service
 public class ImageSavingService {
-
     private final Logger logger = LoggerFactory.getLogger(ImageSavingService.class);
+    private final Path path = Paths.get("frontend/src/assets/images");
 
-    public void saveToLocal(MultipartFile[] images, List<Image> imageNames) throws IOException {
-        Path path = Paths.get("frontend/src/assets/images");
+    public void saveAllToLocal(MultipartFile[] images, List<Image> imageNames) throws IOException {
         //create images folder if not exist
         if (!Files.exists(path)) {
             try {
@@ -30,35 +29,31 @@ public class ImageSavingService {
             }
         }
         for (int i = 0; i < images.length; i++) {
-            try (InputStream fileInputStream = images[i].getInputStream()) {
-                Files.copy(fileInputStream, path.resolve(imageNames.get(i).getPath()));
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-                throw new IOException("Can't save images, try again later!");
-            }
+            saveToLocal(images[i], imageNames.get(i).getName());
         }
     }
 
-    public void removeFromLocal(List<Image> images) {
-        Path path = Paths.get("frontend/src/assets/images");
+    public void saveToLocal(MultipartFile image, String imageName) throws IOException {
+        try (InputStream fileInputStream = image.getInputStream()) {
+            Files.copy(fileInputStream, path.resolve(imageName));
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new IOException("Can't save image, try again later!");
+        }
+    }
+
+    public void removeAllFromLocal(List<Image> images) throws IOException {
         for (Image image : images) {
-            try {
-                Files.deleteIfExists(path.resolve(image.getPath()));
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
+            removeFromLocal(image);
         }
     }
 
-    //overload removeFromLocal method with a parameter String[] paths
-    public void removeFromLocal(String[] images) {
-        Path path = Paths.get("frontend/src/assets/images");
-        for (String image : images) {
-            try {
-                Files.deleteIfExists(path.resolve(image));
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
+    public void removeFromLocal(Image image) throws IOException {
+        try {
+            Files.deleteIfExists(path.resolve(image.getName()));
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new IOException("Can't delete image, try again later!");
         }
     }
 }

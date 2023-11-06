@@ -23,8 +23,11 @@ export class PostService {
     return this.http.post<string>(`${this.apiUrl}/posts`, formData, { responseType: 'text' as 'json' });
   }
 
-  updatePost(id: number, content: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/posts/${id}`, content, { responseType: 'text' as 'json' });
+  updatePost(id: number, content: string, images: File[]): Observable<any> {
+    const formData = new FormData();
+    formData.append('content', content);
+    images.forEach(image => formData.append('images', image));
+    return this.http.put(`${this.apiUrl}/posts/${id}`, formData);
   }
 
   deletePost(id: number): Observable<any> {

@@ -20,9 +20,6 @@ export class DropzoneComponent implements ControlValueAccessor {
   files: File[] = [];
   imagesDataUrl: string[] = [];
 
-  @Input() editing: boolean = false;
-  @Output() imagesAdded: EventEmitter<File[]> = new EventEmitter<File[]>();
-  @Output() imageRemoved: EventEmitter<number> = new EventEmitter<number>();
   @ViewChild('fileInput') fileInput: ElementRef = {} as ElementRef;
 
   writeValue(files: File[]): void {
@@ -71,13 +68,9 @@ export class DropzoneComponent implements ControlValueAccessor {
           continue;
         this.generateDataUrl(files[i]);
         this.files.push(files[i]);
-        if (this.editing)
-          newFiles.push(files[i]);
       }
       this.markAsTouched();
       this.onChange(this.files);
-      if (this.editing)
-        this.imagesAdded.emit(newFiles);
     }
   }
 
@@ -95,8 +88,6 @@ export class DropzoneComponent implements ControlValueAccessor {
 
   removeImage(event: MouseEvent, index: number) {
     event.stopPropagation();
-    if (this.editing)
-      this.imageRemoved.emit(index);
     this.imagesDataUrl.splice(index, 1);
     this.files.splice(index, 1);
     this.onChange(this.files);

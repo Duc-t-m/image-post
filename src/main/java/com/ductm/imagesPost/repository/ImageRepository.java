@@ -10,6 +10,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findAllByPostId(long id);
 
     @Transactional
-    void deleteByPathIn(String[] paths);
+    List<Image> deleteByName(String name);
 
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +11,9 @@ export class ImageService {
   constructor(private http: HttpClient) { }
 
   getFromLocal(image: string): Observable<any> {
-    return this.http.get(`assets/images/${image}`, { responseType: 'blob' });
-  }
-
-  updateImages(postId: number, imagesToAdd: File[], imagesToRemove: string[]): Observable<any> {
-    const formData = new FormData();
-    imagesToAdd.forEach(image => formData.append('imagesToAdd', image));
-    imagesToRemove.forEach(image => formData.append('imagesToRemove', image));
-    
-    return this.http.post(`${this.apiUrl}/images/${postId}`, formData);
+    return this.http.get(`assets/images/${image}`, { responseType: 'blob' })
+      .pipe(
+        map((file: Blob) => new File([file], image))
+      );
   }
 }

@@ -23,6 +23,7 @@ import { DropzoneCdkModule } from '@ngx-dropzone/cdk';
 import { DropzoneMaterialModule } from '@ngx-dropzone/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DropzoneComponent } from './dropzone/dropzone.component';
+import { PendingComponent } from './pending/pending.component';
 
 function tokenGetter() {
   return localStorage.getItem("token");
@@ -42,7 +43,8 @@ function tokenGetter() {
     HomeComponent,
     HeaderComponent,
     SignUpComponent,
-    DropzoneComponent
+    DropzoneComponent,
+    PendingComponent
   ],
   imports: [
     BrowserModule,

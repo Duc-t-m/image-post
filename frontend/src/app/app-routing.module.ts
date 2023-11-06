@@ -4,9 +4,10 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { authenticated } from 'src/guard/route.guard';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { PendingComponent } from './pending/pending.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '', component: PendingComponent, pathMatch: 'full', title: 'Pending' },
     { path: 'login', component: LoginComponent, title: 'Login' },
     { path: 'home', component: HomeComponent, title: 'Home', canActivate: [authenticated] },
     { path: 'sign-up', component: SignUpComponent, title: 'Sign Up' }

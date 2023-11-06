@@ -9,9 +9,6 @@
         <small *ngIf="username?.hasError('required')">
             Username cannot be empty!
         </small>
-        <small *ngIf="username?.hasError('pattern')">
-            Username should only include letters, numbers and have length between 8 and 100 characters!
-        </small>
     </div>
     <label for="password">Password</label>
     <input type="password" id="password" name="password" formControlName="password"
@@ -20,10 +17,6 @@
     <div *ngIf="(password?.dirty || password?.touched) && !password?.valid" class="text-red-500">
         <small *ngIf="password?.hasError('required')">
             Password cannot be empty!
-        </small>
-        <small *ngIf="password?.hasError('pattern')">
-            Password should include at least 1 number, 1 lowercase letter, 1 uppercase letter, 1 special character and
-            have length between 8 and 100 characters!
         </small>
     </div>
     <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 rounded p-2">Login</button>

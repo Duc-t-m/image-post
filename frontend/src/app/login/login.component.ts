@@ -15,14 +15,12 @@ export class LoginComponent {
   loginForm = this.formBuilder.group({
     username: ['',
       [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9]{8,100}$/)
+        Validators.required
       ]
     ],
     password: ['',
       [
-        Validators.required,
-        Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,100}$/)
+        Validators.required
       ]
     ]
   });

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PostService } from '../../service/post.service';
 import { ViewPostDTO } from "../../model/post.type"
 import { Pagination } from 'src/model/pagination.type';
-import { catchError, of, retry } from 'rxjs';
+import { catchError, of, retry, delay } from 'rxjs';
 
 @Component({
   selector: 'home',
@@ -12,6 +12,7 @@ export class HomeComponent {
   posts: ViewPostDTO[] = [];
   showAdd = false;
   usingCam = false;
+  loading = false;
   pagination = {
     page: 0,
     size: 3
@@ -23,6 +24,7 @@ export class HomeComponent {
   }
 
   loadPosts() {
+    this.loading = true;
     this.postService.getPosts(this.pagination.page, this.pagination.size)
       .pipe(
         catchError(error => {
@@ -43,6 +45,7 @@ export class HomeComponent {
           totalElements: data.totalElements,
           numberOfElements: data.numberOfElements
         }
+        this.loading = false;
       });
 
   }

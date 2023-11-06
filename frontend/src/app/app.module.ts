@@ -20,8 +20,6 @@ import { HeaderComponent } from './header/header.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { DropzoneCdkModule } from '@ngx-dropzone/cdk';
-import { DropzoneMaterialModule } from '@ngx-dropzone/material';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { DropzoneComponent } from './dropzone/dropzone.component';
 import { PendingComponent } from './pending/pending.component';
 
@@ -68,9 +66,7 @@ function tokenGetter() {
         allowedDomains: ["localhost:8080"]
       }
     }),
-    DropzoneCdkModule,
-    DropzoneMaterialModule,
-    MatFormFieldModule
+    DropzoneCdkModule
   ],
   providers: [],
   bootstrap: [AppComponent]

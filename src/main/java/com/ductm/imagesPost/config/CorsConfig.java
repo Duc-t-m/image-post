@@ -1,9 +1,9 @@
-package com.ductm.imagesPost.configuration;
+package com.ductm.imagesPost.config.security;
 
+import com.ductm.imagesPost.config.AppProperties;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -11,29 +11,29 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 
 @Configuration
+@AllArgsConstructor
 public class CorsConfig {
-    //config cors so an angular front-end hosted in http://localhost:4200 can send requests to rest controllers
-    //hosted in http://localhost:8080
+    AppProperties props;
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
+        config.setAllowedOrigins(props.getCors().getAllowedOrigins());
         config.setAllowedMethods(Arrays.asList(
-                HttpMethod.GET.name(),
-                HttpMethod.POST.name(),
-                HttpMethod.PUT.name(),
-                HttpMethod.DELETE.name(),
-                HttpMethod.OPTIONS.name()
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
         ));
         config.setAllowedHeaders(Arrays.asList(
-                HttpHeaders.ACCEPT,
-                HttpHeaders.CONTENT_TYPE,
-                HttpHeaders.AUTHORIZATION
+                "Accept",
+                "Content-Type",
+                "Authorization"
         ));
         source.registerCorsConfiguration("/**", config);
-        CorsFilter filter = new CorsFilter(source);
-        return filter;
+        return new CorsFilter(source);
     }
 }

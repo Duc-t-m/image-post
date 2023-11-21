@@ -1,21 +1,19 @@
-package com.ductm.imagesPost.configuration;
+package com.ductm.imagesPost.config;
 
+import com.ductm.imagesPost.security.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
-@Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableWebSecurity
 @AllArgsConstructor
-public class WebSecurityConfig {
+public class SecurityConfig {
 
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtFilter jwtFilter;
 
     @Bean
@@ -27,19 +25,21 @@ public class WebSecurityConfig {
             .csrf()
                 .disable()
             .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/sign-up").permitAll()
-                .antMatchers(HttpMethod.POST, "/check/**").permitAll()
+                .antMatchers("/login", "/sign-up", "/check/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and()
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+            .oauth2Login()
+                .and()
+            .logout()
             ;
         // @formatter:on
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

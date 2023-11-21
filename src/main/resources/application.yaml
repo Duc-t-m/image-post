@@ -5,7 +5,7 @@ spring.datasource.username=root
 spring.datasource.password=247314
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-jwt.secret=secret
+jwt.secret=1q2s3e4f5t6h7u8k9o0;
 jwt.expiration=86400000
 
 

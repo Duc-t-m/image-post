@@ -1,6 +1,6 @@
 package com.ductm.imagesPost.repository;
 
-import com.ductm.imagesPost.entity.Account;
+import com.ductm.imagesPost.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -8,9 +8,9 @@ import java.util.Optional;
 /**
  * @author tranm
  */
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public interface AccountRepository extends JpaRepository<User, Long> {
 
-    Optional<Account> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     boolean existsByUsername(String username);
 

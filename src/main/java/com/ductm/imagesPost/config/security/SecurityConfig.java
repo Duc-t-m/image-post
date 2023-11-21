@@ -1,20 +1,29 @@
-package com.ductm.imagesPost.config;
+package com.ductm.imagesPost.config.security;
 
-import com.ductm.imagesPost.security.JwtFilter;
+import com.ductm.imagesPost.config.security.oauth2.CookieAuthzRequestRepo;
+import com.ductm.imagesPost.config.security.oauth2.CustomOAuth2UserService;
+import com.ductm.imagesPost.config.security.oauth2.OAuth2FailureHandler;
+import com.ductm.imagesPost.config.security.oauth2.OAuth2SuccessHandler;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @AllArgsConstructor
+@Slf4j
 public class SecurityConfig {
-
-    private final JwtFilter jwtFilter;
+    private CustomOAuth2UserService oAuth2UserService;
+    private OAuth2SuccessHandler successHandler;
+    private OAuth2FailureHandler failureHandler;
+    private JwtFilter filter;
+    private CookieAuthzRequestRepo cookieAuthzRequestRepo;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -29,17 +38,32 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .authenticationEntryPoint((req, res, err) -> {
+                    log.error("Responding with unauthorized error. Message - {}", err.getMessage());
+                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, err.getLocalizedMessage());
+                })
                 .and()
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .oauth2Login()
+                .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(cookieAuthzRequestRepo)
+                    .and()
+                .redirectionEndpoint()
+                    .baseUri("/oauth2/callback/*")
+                    .and()
+                .userInfoEndpoint()
+                    .userService(oAuth2UserService)
+                    .and()
+                .successHandler(successHandler)
+                .failureHandler(failureHandler)
                 .and()
             .logout()
             ;
         // @formatter:on
-//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

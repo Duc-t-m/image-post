@@ -1,4 +1,4 @@
-package com.ductm.imagesPost.config;
+package com.ductm.imagesPost.config.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

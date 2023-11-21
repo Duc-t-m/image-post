@@ -1,6 +1,7 @@
-package com.ductm.imagesPost.config;
+package com.ductm.imagesPost.service;
 
-import com.ductm.imagesPost.security.UserPrincipal;
+import com.ductm.imagesPost.config.AppProperties;
+import com.ductm.imagesPost.config.security.UserPrincipal;
 import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

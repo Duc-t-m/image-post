@@ -1,8 +1,8 @@
-package com.ductm.imagesPost.config;
+package com.ductm.imagesPost.service;
 
+import com.ductm.imagesPost.config.security.UserPrincipal;
 import com.ductm.imagesPost.entity.User;
 import com.ductm.imagesPost.repository.UserRepository;
-import com.ductm.imagesPost.security.UserPrincipal;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

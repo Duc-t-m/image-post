@@ -22,6 +22,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { DropzoneCdkModule } from '@ngx-dropzone/cdk';
 import { DropzoneComponent } from './dropzone/dropzone.component';
 import { PendingComponent } from './pending/pending.component';
+import { AuthenticationRedirectComponent } from './authentication-redirect/authentication-redirect.component';
 
 function tokenGetter() {
   return localStorage.getItem("token");
@@ -42,7 +43,8 @@ function tokenGetter() {
     HeaderComponent,
     SignUpComponent,
     DropzoneComponent,
-    PendingComponent
+    PendingComponent,
+    AuthenticationRedirectComponent
   ],
   imports: [
     BrowserModule,

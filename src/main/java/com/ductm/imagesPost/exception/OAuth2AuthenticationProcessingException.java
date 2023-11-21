@@ -1,4 +1,4 @@
-package com.example.springsocial.exception;
+package com.ductm.imagesPost.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

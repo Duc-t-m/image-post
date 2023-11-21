@@ -7,6 +7,9 @@
       <item index="2" class="java.lang.String" itemvalue="org.springframework.web.bind.annotation.PostMapping" />
       <item index="3" class="java.lang.String" itemvalue="org.springframework.web.bind.annotation.PutMapping" />
     </list>
+    <writeAnnotations>
+      <writeAnnotation name="org.springframework.beans.factory.annotation.Value" />
+    </writeAnnotations>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
@@ -16,5 +19,11 @@
       </list>
     </option>
   </component>
+  <component name="PWA">
+    <option name="wasEnabledAtLeastOnce" value="true" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="8" project-jdk-type="JavaSDK" />
+  <component name="ProjectType">
+    <option name="id" value="jpab" />
+  </component>
 </project>

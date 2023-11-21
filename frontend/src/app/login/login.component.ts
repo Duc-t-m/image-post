@@ -12,6 +12,9 @@ import { SecurityService } from 'src/service/security.service';
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
+  google = "http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:4200/oauth2/redirect";
+  github = "http://localhost:8080/oauth2/authorize/github?redirect_uri=http://localhost:4200/oauth2/redirect";
+  facebook = "http://localhost:8080/oauth2/authorize/facebook?redirect_uri=http://localhost:4200/oauth2/redirect";
   loginForm = this.formBuilder.group({
     username: ['',
       [

@@ -1,6 +1,5 @@
-package com.ductm.imagesPost.config.security;
+package com.ductm.imagesPost.config;
 
-import com.ductm.imagesPost.config.AppProperties;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +12,7 @@ import java.util.Arrays;
 @Configuration
 @AllArgsConstructor
 public class CorsConfig {
-    AppProperties props;
+    private AppProperties props;
 
     @Bean
     public CorsFilter corsFilter() {

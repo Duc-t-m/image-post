@@ -1,6 +1,7 @@
-package com.example.springsocial.security.oauth2;
+package com.ductm.imagesPost.config.security.oauth2;
 
-import com.example.springsocial.util.CookieUtils;
+import com.ductm.imagesPost.config.AppProperties;
+import com.ductm.imagesPost.service.CookieService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -13,17 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.example.springsocial.security.oauth2.CookieAuthzRequestRepo.REDIRECT_URI_PARAM_COOKIE_NAME;
-
 @Component
 @AllArgsConstructor
 public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler {
+    private AppProperties props;
     private CookieAuthzRequestRepo cookieAuthzRequestRepo;
+    private CookieService cookieService;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
             throws IOException, ServletException {
-        String targetUrl = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        String targetUrl = cookieService.getCookie(request, props.getCookie().getRedirectUri())
                 .map(Cookie::getValue)
                 .orElse(("/"));
 

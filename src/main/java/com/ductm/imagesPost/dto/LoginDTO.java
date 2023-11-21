@@ -1,13 +1,18 @@
 package com.ductm.imagesPost.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class UserLoginDTO {
-    private String username;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+@Getter
+@Setter
+public class LoginDTO {
+    @Email
+    @NotBlank
+    private String email;
+    
+    @NotBlank
     private String password;
 }

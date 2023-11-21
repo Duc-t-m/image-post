@@ -1,4 +1,4 @@
-package com.ductm.imagesPost.security;
+package com.ductm.imagesPost.config.security;
 
 import com.ductm.imagesPost.entity.User;
 import lombok.Getter;

@@ -1,15 +1,15 @@
-package com.ductm.imagesPost.security;
+package com.ductm.imagesPost.config.security;
 
 import com.ductm.imagesPost.service.JwtService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -20,41 +20,43 @@ import java.io.IOException;
 
 @AllArgsConstructor
 @Component
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
-    private UserDetailsService userDetailsService;
     private JwtService jwtService;
+    private UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        try {
+            String jwt = getJwtFromRequest(request);
 
-        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (StringUtils.hasText(jwt) && jwtService.validateToken(jwt)) {
+                String email = jwtService.getEmailFromToken(jwt);
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            log.error("Could not set user authentication in security context", ex);
         }
 
-        String jwt = authorizationHeader.split("\\s")[1];
-        String username = jwtService.extractUsername(jwt);
-        SecurityContext context = SecurityContextHolder.getContext();
-
-        if (username == null || !jwtService.validate(jwt) || context.getAuthentication() != null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername(),
-                userDetails.getPassword(),
-                userDetails.getAuthorities()
-        );
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        context.setAuthentication(authToken);
         filterChain.doFilter(request, response);
+    }
+
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(bearerToken.indexOf(" "));
+        }
+        return null;
     }
 }

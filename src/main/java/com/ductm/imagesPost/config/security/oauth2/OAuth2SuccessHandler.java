@@ -1,9 +1,8 @@
-package com.example.springsocial.security.oauth2;
+package com.ductm.imagesPost.config.security.oauth2;
 
-import com.example.springsocial.config.AppProperties;
-import com.example.springsocial.exception.BadRequestException;
-import com.example.springsocial.security.TokenProvider;
-import com.example.springsocial.util.CookieUtils;
+import com.ductm.imagesPost.config.AppProperties;
+import com.ductm.imagesPost.service.CookieService;
+import com.ductm.imagesPost.service.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,14 +17,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-import static com.example.springsocial.security.oauth2.CookieAuthzRequestRepo.REDIRECT_URI_PARAM_COOKIE_NAME;
-
 @Component
 @AllArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private TokenProvider tokenProvider;
+    private JwtService jwtService;
     private AppProperties props;
     private CookieAuthzRequestRepo cookieAuthzRequestRepo;
+    private CookieService cookieService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -42,16 +40,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        Optional<String> redirectUri = cookieService.getCookie(request, props.getCookie().getRedirectUri())
                 .map(Cookie::getValue);
-        Optional<String> uri = Optional.ofNullable(request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME));
+        Optional<String> uri = Optional.ofNullable(request.getParameter(props.getCookie().getRedirectUri()));
         if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+            throw new RuntimeException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
+        String token = jwtService.createToken(authentication);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)

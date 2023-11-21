@@ -13,8 +13,10 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,10 +41,13 @@ public class PostController {
     final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @GetMapping("")
-    Page<ViewPostDTO> getPage(@RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "3") int size) {
+    Page<ViewPostDTO> getPage(
+            @PageableDefault(size = 3)
+            @SortDefault(sort = "id", direction = Sort.Direction.DESC)
+            Pageable page
+    ) {
         return postRepository
-                .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
+                .findAll(page)
                 .map(postMapper::toViewDTO);
     }
 

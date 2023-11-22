@@ -27,7 +27,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
-
         try {
             return processOAuth2User(oAuth2UserRequest, oAuth2User);
         } catch (AuthenticationException ex) {
@@ -46,7 +45,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (!StringUtils.hasText(userInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
-
         Optional<User> userOptional = userRepository.findByEmail(userInfo.getEmail());
         User user;
         if (userOptional.isPresent()) {
@@ -60,7 +58,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
             user = registerNewUser(request, userInfo);
         }
-
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
@@ -72,6 +69,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(info.getName());
         user.setEmail(info.getEmail());
         user.setAvatarUrl(info.getAvatarUrl());
+        user.setEmailVerified(true);
         return userRepository.save(user);
     }
 

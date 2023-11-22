@@ -10,8 +10,6 @@ import com.ductm.imagesPost.repository.ImageRepository;
 import com.ductm.imagesPost.repository.PostRepository;
 import com.ductm.imagesPost.service.ImageSavingService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,10 +36,9 @@ public class PostController {
     ImageRepository imageRepository;
     ImageSavingService imageSavingService;
     ImageMapper imageMapper;
-    final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @GetMapping("")
-    Page<ViewPostDTO> getPage(
+    Page<ViewPostDTO> getPosts(
             @PageableDefault(size = 3)
             @SortDefault(sort = "id", direction = Sort.Direction.DESC)
             Pageable page

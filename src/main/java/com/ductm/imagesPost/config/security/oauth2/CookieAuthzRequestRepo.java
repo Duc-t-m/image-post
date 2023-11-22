@@ -25,13 +25,16 @@ public class CookieAuthzRequestRepo implements AuthorizationRequestRepository<OA
     }
 
     @Override
-    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
+    public void saveAuthorizationRequest(
+            OAuth2AuthorizationRequest authorizationRequest,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         if (authorizationRequest == null) {
             cookieService.deleteCookie(request, response, props.getCookie().getAuthorizationRequest());
             cookieService.deleteCookie(request, response, props.getCookie().getRedirectUri());
             return;
         }
-
         cookieService.addCookie(
                 response,
                 props.getCookie().getAuthorizationRequest(),

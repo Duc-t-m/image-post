@@ -14,8 +14,8 @@ export class HeaderComponent {
   ) { }
 
   onLogout() {
-    this.securityService.logout();
-    this.router.navigate(['login']);
+    this.securityService.logout()
+      .subscribe(() => this.router.navigate(['/login']));
   }
 
   get showLogout() {

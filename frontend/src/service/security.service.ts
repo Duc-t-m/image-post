@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {JwtHelperService} from '@auth0/angular-jwt';
-import {UserLoginDTO, UserSignUpDTO} from '../model/user.type';
+import {LoginDTO, SignUpDTO} from '../model/user.type';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +11,11 @@ export class SecurityService {
   apiUrl = 'http://localhost:8080';
 
   constructor(
-    private http: HttpClient,
-    private jwtHelper: JwtHelperService
+    private http: HttpClient
   ) {
   }
 
-  login(account: UserLoginDTO): Observable<any> {
+  login(account: LoginDTO): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, account, {responseType: 'text'});
   }
 
@@ -31,11 +29,10 @@ export class SecurityService {
 
   logout() {
     localStorage.removeItem('token');
-    this.http.post(`${this.apiUrl}/logout`, {})
-      .subscribe();
+    return this.http.post(`${this.apiUrl}/logout`, {});
   }
 
-  signUp(account: UserSignUpDTO): Observable<any> {
+  signUp(account: SignUpDTO): Observable<any> {
     return this.http.post(`${this.apiUrl}/sign-up`, account, {responseType: 'text'});
   }
 

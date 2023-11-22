@@ -7,6 +7,7 @@ import com.ductm.imagesPost.config.security.oauth2.OAuth2SuccessHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,7 +23,7 @@ public class SecurityConfig {
     private CustomOAuth2UserService oAuth2UserService;
     private OAuth2SuccessHandler successHandler;
     private OAuth2FailureHandler failureHandler;
-    private JwtFilter filter;
+    private JwtFilter jwtFilter;
     private CookieAuthzRequestRepo cookieAuthzRequestRepo;
 
     @Bean
@@ -35,6 +36,7 @@ public class SecurityConfig {
                 .disable()
             .authorizeRequests()
                 .antMatchers("/login", "/sign-up", "/check/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling()
@@ -63,7 +65,7 @@ public class SecurityConfig {
             .logout()
             ;
         // @formatter:on
-        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

@@ -28,8 +28,9 @@ spring:
 app:
   cors:
     allowedOrigins:
-      http://localhost:4200/**
-      http://localhost:8080/**
+      - http://localhost:4200
+      - http://localhost:3000
+      - http://localhost:8080
   img:
     path: frontend/src/assets/images
   jwt:

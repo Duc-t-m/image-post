@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { PostService } from '../../service/post.service';
-import { ViewPostDTO } from "../../model/post.type"
-import { Pagination } from 'src/model/pagination.type';
-import { catchError, of, retry, delay } from 'rxjs';
+import {Component} from '@angular/core';
+import {PostService} from '../../service/post.service';
+import {ViewPostDTO} from "../../model/post.type"
+import {Pagination} from 'src/model/pagination.type';
+import {catchError, of, retry} from 'rxjs';
 
 @Component({
   selector: 'home',
@@ -17,7 +17,9 @@ export class HomeComponent {
     page: 0,
     size: 3
   } as Pagination
-  constructor(private postService: PostService) { }
+
+  constructor(private postService: PostService) {
+  }
 
   ngOnInit() {
     this.loadPosts();
@@ -27,7 +29,7 @@ export class HomeComponent {
     this.loading = true;
     this.postService.getPosts(this.pagination.page, this.pagination.size)
       .pipe(
-        catchError(error => {
+        catchError(() => {
           return of({
             content: [],
             totalPages: 1,
@@ -35,7 +37,7 @@ export class HomeComponent {
             numberOfElements: 0
           })
         }),
-        retry({ count: 3, delay: 10 * 1000, })
+        retry({count: 3, delay: 10 * 1000,})
       )
       .subscribe((data: any) => {
         this.posts = data.content;
@@ -47,7 +49,6 @@ export class HomeComponent {
         }
         this.loading = false;
       });
-
   }
 
   toggleModal() {

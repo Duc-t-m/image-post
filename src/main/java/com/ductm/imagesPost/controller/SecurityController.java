@@ -1,72 +1,80 @@
 package com.ductm.imagesPost.controller;
 
-import com.ductm.imagesPost.configuration.JwtService;
-import com.ductm.imagesPost.dto.UserLoginDTO;
-import com.ductm.imagesPost.dto.UserSignUpDTO;
-import com.ductm.imagesPost.entity.Account;
-import com.ductm.imagesPost.entity.Profile;
-import com.ductm.imagesPost.mapper.UserAccountMapper;
-import com.ductm.imagesPost.repository.AccountRepository;
+import com.ductm.imagesPost.dto.LoginDTO;
+import com.ductm.imagesPost.dto.SignUpDTO;
+import com.ductm.imagesPost.entity.AuthProvider;
+import com.ductm.imagesPost.entity.User;
 import com.ductm.imagesPost.repository.ProfileRepository;
+import com.ductm.imagesPost.repository.UserRepository;
+import com.ductm.imagesPost.service.JwtService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.function.Function;
 
 @RestController
 @RequestMapping("")
 @AllArgsConstructor
+@Slf4j
 public class SecurityController {
-
-    private JwtService jwtService;
-    private UserDetailsService userDetailsService;
+    private AuthenticationManager authManager;
+    private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-    private AccountRepository accountRepository;
+    private JwtService jwtService;
     private ProfileRepository profileRepository;
-    private UserAccountMapper userAccountMapper;
-    private final Logger logger = LoggerFactory.getLogger(SecurityController.class);
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody UserLoginDTO userLoginDTO) {
-        try {
-            UserDetails user = userDetailsService.loadUserByUsername(userLoginDTO.getUsername());
-            if (!passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
-                return ResponseEntity.badRequest().body("Wrong password!");
-            }
-            return ResponseEntity.ok(jwtService.generateToken(user));
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body("Username not found!");
-        }
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDTO.getEmail(),
+                        loginDTO.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtService.createToken(authentication);
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<String> registerUser(@RequestBody UserSignUpDTO userSignupDTO) {
-        logger.info("Registering user: " + userSignupDTO.getUsername());
-        Account account = accountRepository.save(userAccountMapper.userSignUpToAccount(userSignupDTO));
-        Profile profile = userAccountMapper.userSignUpToProfile(userSignupDTO);
-        if (profile.getPhone() != null || profile.getDob() != null || profile.getGender() != null) {
-            profile.setAccount(account);
-            profileRepository.save(profile);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpDTO signUpDTO) {
+        if (userRepository.existsByEmail(signUpDTO.getEmail())) {
+            return ResponseEntity.badRequest().body("Email address already in use.");
         }
-        return ResponseEntity.ok(jwtService.generateToken(userAccountMapper.toUser(account)));
+
+        User user = new User();
+        user.setEmail(signUpDTO.getEmail());
+        user.setName(signUpDTO.getName());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setProvider(AuthProvider.local);
+
+        User result = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/user/me")
+                .buildAndExpand(result.getId()).toUri();
+
+        return ResponseEntity.created(location).body("User registered successfully@");
     }
 
     @PostMapping("/check/{field}")
     public ResponseEntity<Boolean> checkFieldExists(@PathVariable String field, @RequestBody String value) {
         Function<String, Boolean> checkFunc;
         switch (field) {
-            case "username":
-                checkFunc = accountRepository::existsByUsername;
-                break;
             case "email":
-                checkFunc = accountRepository::existsByEmail;
+                checkFunc = userRepository::existsByEmail;
                 break;
             case "phone":
                 checkFunc = profileRepository::existsByPhone;

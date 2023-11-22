@@ -1,5 +1,6 @@
-package com.ductm.imagesPost.configuration;
+package com.ductm.imagesPost.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -11,15 +12,16 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 
 @Configuration
+@AllArgsConstructor
 public class CorsConfig {
-    //config cors so an angular front-end hosted in http://localhost:4200 can send requests to rest controllers
-    //hosted in http://localhost:8080
+    private AppProperties props;
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
+        config.setAllowedOrigins(props.getCors().getAllowedOrigins());
         config.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
@@ -28,12 +30,11 @@ public class CorsConfig {
                 HttpMethod.OPTIONS.name()
         ));
         config.setAllowedHeaders(Arrays.asList(
-                HttpHeaders.ACCEPT,
                 HttpHeaders.CONTENT_TYPE,
-                HttpHeaders.AUTHORIZATION
+                HttpHeaders.AUTHORIZATION,
+                HttpHeaders.ACCEPT
         ));
         source.registerCorsConfiguration("/**", config);
-        CorsFilter filter = new CorsFilter(source);
-        return filter;
+        return new CorsFilter(source);
     }
 }

@@ -1,0 +1,50 @@
+spring:
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/imagesPost?createDatabaseIfNotExist=true
+    username: root
+    password: 247314
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: 4f86256655197315029d
+            clientSecret: 934963b32049cb8288f51f2b5ace025927a44201
+          google:
+            client-id: 644934341968-9ttsdpk9ik8eetc2902eb4lpo6la68b5.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+app:
+  cors:
+    allowedOrigins:
+      - http://localhost:4200
+      - http://localhost:3000
+      - http://localhost:8080
+  img:
+    path: frontend/src/assets/images
+  jwt:
+    secret: 3242feq34564h5yrj89m7kBGjhe63h643gv342v5gnAGw8m8o90e20vbYUUm3mbngbntLKMNwbelrtn039235825235
+    expiration: 86400000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:4200/oauth2/redirect
+  cookie:
+    expiration: 180
+    redirectUri: redirect_uri
+    authorizationRequest: oauth2_auth_request
+
+
+
+
+

@@ -13,6 +13,10 @@ import java.io.Serializable;
 @Data
 public class Image implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

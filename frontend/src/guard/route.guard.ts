@@ -1,7 +1,7 @@
-import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { ToastrService } from 'ngx-toastr';
+import {inject} from '@angular/core';
+import {CanActivateFn} from '@angular/router';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import {ToastrService} from 'ngx-toastr';
 
 export const authenticated: CanActivateFn = (route, state) => {
   const jwtHelper = inject(JwtHelperService);
@@ -15,9 +15,7 @@ export const authenticated: CanActivateFn = (route, state) => {
     toastr.warning("Your session has expired", "Warning");
     return false;
   }
-  token = token.toString();
-  const role = jwtHelper.decodeToken(token).role;
-  return role === 'ADMIN' || role === 'USER';
+  return true;
 };
 
 

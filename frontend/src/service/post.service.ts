@@ -13,7 +13,7 @@ export class PostService {
   constructor(private http: HttpClient) { }
 
   getPosts(page: number, size: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/posts`, { params: { page, size } });
+    return this.http.get(`${this.apiUrl}/posts`, { params: { page, size, sort: "id,desc" } });
   }
 
   addPost(post: NewPostDTO): Observable<string> {

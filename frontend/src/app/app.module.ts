@@ -22,6 +22,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { DropzoneCdkModule } from '@ngx-dropzone/cdk';
 import { DropzoneComponent } from './dropzone/dropzone.component';
 import { PendingComponent } from './pending/pending.component';
+import { RedirectComponent } from './redirect/redirect.component';
 
 function tokenGetter() {
   return localStorage.getItem("token");
@@ -42,7 +43,8 @@ function tokenGetter() {
     HeaderComponent,
     SignUpComponent,
     DropzoneComponent,
-    PendingComponent
+    PendingComponent,
+    RedirectComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +65,8 @@ function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ["localhost:8080"]
+        allowedDomains: ["localhost:8080"],
+        authScheme: "Bearer ",
       }
     }),
     DropzoneCdkModule

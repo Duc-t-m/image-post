@@ -1,11 +1,11 @@
 <div class="flex flex-col gap-2 items-center justify-start relative min-h-[90vh]"
     [class.justify-center]="posts.length==0">
     <post *ngFor="let post of posts" [_post]="post"
-        class="w-2/3 h-fit min-h-[13rem] border-white border-2 rounded text-white font-sans font-bold relative overflow-auto"
+        class="w-1/2 h-fit min-h-[13rem] border-white border-2 rounded text-white font-sans font-bold relative overflow-auto"
         (removePost)="remove($event)">
     </post>
     <div *ngIf="loading" class="contents">
-        <post-loading *ngFor="let i of [0, 1, 2]" class="w-2/3 h-fit min-h-[13rem] border-white border-2 rounded">
+        <post-loading *ngFor="let i of [0, 1, 2]" class="w-1/2 h-fit min-h-[13rem] border-white border-2 rounded">
         </post-loading>
     </div>
     <p *ngIf="!loading && posts.length==0" class="text-white">No post to show yet!</p>
@@ -27,7 +27,7 @@
 
     <webcam-test *ngIf="usingCam" (closeModal)="toggleCam()"></webcam-test>
 
-    <pagination *ngIf="posts.length>0" class="w-fit min-[290px]:w-2/3" [pagination]="pagination"
+    <pagination *ngIf="posts.length>0" class="w-fit min-[290px]:w-1/2" [pagination]="pagination"
         (changePageEvent)="changePage($event)" (changePageSizeEvent)="changePageSize($event)">
     </pagination>
 </div>

@@ -19,6 +19,7 @@ export class PostComponent {
   showButton = false;
   showImagePreview = false;
   imageToPreviewIndex = -1;
+  maxDisplayedImages = 7;
 
   @Input()
   set _post(post: ViewPostDTO) {
@@ -54,9 +55,9 @@ export class PostComponent {
     return files;
   }
   get imagesToDisplay() {
-    if (this.post.images.length <= 11)
+    if (this.post.images.length <= this.maxDisplayedImages)
       return this.post.images;
-    return this.post.images.slice(0, 10);
+    return this.post.images.slice(0, this.maxDisplayedImages - 1);
   }
 
   constructor(

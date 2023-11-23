@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, Subject, catchError, filter, map, of, startWith, switchMap, take, tap, timer } from 'rxjs';
-import { UserSignUpDTO } from 'src/model/user.type';
-import { SecurityService } from 'src/service/security.service';
-import { dateValidator, existControlValidator, matchingPasswordValidator } from 'src/validators/sign-up.validator';
+import {Component} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {catchError, filter, of, startWith, Subject, switchMap, take, tap} from 'rxjs';
+import {SignUpDTO} from 'src/model/user.type';
+import {SecurityService} from 'src/service/security.service';
+import {dateValidator, existControlValidator, matchingPasswordValidator} from 'src/validators/sign-up.validator';
 
 @Component({
   selector: 'sign-up',
@@ -49,7 +49,7 @@ export class SignUpComponent {
             Validators.required
           ]]
         },
-        { validators: matchingPasswordValidator('pass', 'cfpass') }
+        {validators: matchingPasswordValidator('pass', 'cfpass')}
       ),
       email: ['',
         [
@@ -70,31 +70,63 @@ export class SignUpComponent {
           month: '',
           year: '',
         },
-        { validators: dateValidator('day', 'month', 'year') }),
+        {validators: dateValidator('day', 'month', 'year')}),
       gender: ''
     }
   );
 
   //getters for all form controls
-  get username() { return this.signUpForm.get('username') as AbstractControl; }
-  get password() { return this.signUpForm.get('password') as AbstractControl; }
-  get pass() { return this.signUpForm.get('password.pass') as AbstractControl; }
-  get cfpass() { return this.signUpForm.get('password.cfpass') as AbstractControl; }
-  get email() { return this.signUpForm.get('email') as AbstractControl; }
-  get phone() { return this.signUpForm.get('phone') as AbstractControl; }
-  get dob() { return this.signUpForm.get('dob') as AbstractControl; }
-  get day() { return this.signUpForm.get('dob.day') as AbstractControl; }
-  get month() { return this.signUpForm.get('dob.month') as AbstractControl; }
-  get year() { return this.signUpForm.get('dob.year') as AbstractControl; }
-  get gender() { return this.signUpForm.get('gender') as AbstractControl; }
+  get username() {
+    return this.signUpForm.get('username') as AbstractControl;
+  }
+
+  get password() {
+    return this.signUpForm.get('password') as AbstractControl;
+  }
+
+  get pass() {
+    return this.signUpForm.get('password.pass') as AbstractControl;
+  }
+
+  get cfpass() {
+    return this.signUpForm.get('password.cfpass') as AbstractControl;
+  }
+
+  get email() {
+    return this.signUpForm.get('email') as AbstractControl;
+  }
+
+  get phone() {
+    return this.signUpForm.get('phone') as AbstractControl;
+  }
+
+  get dob() {
+    return this.signUpForm.get('dob') as AbstractControl;
+  }
+
+  get day() {
+    return this.signUpForm.get('dob.day') as AbstractControl;
+  }
+
+  get month() {
+    return this.signUpForm.get('dob.month') as AbstractControl;
+  }
+
+  get year() {
+    return this.signUpForm.get('dob.year') as AbstractControl;
+  }
+
+  get gender() {
+    return this.signUpForm.get('gender') as AbstractControl;
+  }
 
   constructor(
     private formBuilder: FormBuilder,
     private securityService: SecurityService,
     private toastr: ToastrService,
     private router: Router
-  ) { }
-
+  ) {
+  }
 
 
   formSubmit$ = new Subject<void>();
@@ -132,7 +164,7 @@ export class SignUpComponent {
         phone: phoneNumber,
         dob: birthDate,
         gender: this.gender.value
-      } as UserSignUpDTO)
+      } as SignUpDTO)
       .pipe(
         catchError(err => {
           this.toastr.error(err.error, 'Sign up failed');

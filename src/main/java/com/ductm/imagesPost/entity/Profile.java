@@ -18,8 +18,8 @@ public class Profile implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(unique = true, length = 20)
     private String phone;
